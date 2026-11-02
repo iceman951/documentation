@@ -11,7 +11,7 @@
     />
     <div
         class="absolute -top-16 left-0 w-full flex justify-center items-center h-screen object-center animate-pulse overflow-hidden"
-        style="animation-duration: 8s;"
+        style="animation-duration: 8s"
     >
         <div
             class="aspect-square h-full lg:h-auto lg:w-full !bg-right lg:!bg-center md:translate-x-0 lg:animate-spin opacity-90 dark:opacity-12.5"
@@ -26,16 +26,16 @@
         class="z-10 relative flex w-full pt-6 md:pt-0 mb-16 md:mb-8 px-6 overflow-hidden transition-all"
         :class="
             kawaii
-                ? 'flex-col lg:flex-row justify-center items-around p-0 lg:px-0'
+                ? 'flex-col lg:flex-row-reverse justify-center items-around mx-auto p-0 md:px-0 2xl-max-w-[2160px]'
                 : 'flex-col justify-center items-center'
         "
         style="min-height: calc(100vh - 64px)"
     >
         <div
-            class="flex flex-col justify-center transition-all"
+            class="flex flex-col justify-center transition-all pb-4"
             :class="
                 kawaii
-                    ? 'items-start my-auto lg:max-w-5xl xl:max-w-5xl 2xl:max-w-6xl lg:pl-10 lg:pb-6 lg:pr-6'
+                    ? 'items-start my-auto lg:max-w-5xl xl:max-w-5xl 2xl:max-w-6xl md:pl-10 md:pb-6 md:pr-6'
                     : 'items-center'
             "
             :style="kawaii ? 'zoom: 1.08' : ''"
@@ -45,6 +45,15 @@
 	        >
 	            ElysiaJS
 	        </h1> -->
+
+            <a
+                class="flex items-center gap-1.5 text-pink-500 dark:text-pink-300 text-sm font-medium pl-1.5 pr-2.5 py-0.75 rounded-full bg-pink-400/12.5 bg-pink-200/12.5 mb-4 clicky"
+                href="https://next.elysiajs.com"
+            >
+                <Sparkle :size="14" />
+                Elysia 2 doc is here
+            </a>
+
             <img
                 src="/assets/elysia_v.webp"
                 alt="Curved text logo saying 'Elysia JS'"
@@ -138,14 +147,14 @@
                 </a>
             </h2>
             <h3
-                class="text-xl md:text-2xl text-gray-500 dark:text-gray-400 !leading-normal text-left w-full max-w-2xl"
+                class="text-xl md:text-2xl text-mauve-500 dark:text-mauve-400 !leading-normal text-left w-full max-w-2xl"
                 :class="kawaii ? '' : 'md:text-center'"
             >
                 Backend TypeScript framework with
                 <span
                     class="text-transparent font-semibold bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400"
                     >End-to-End Type Safety</span
-                >, formidable speed, and exceptional developer experience.
+                >, formidable speed, and exceptional DX across runtime.
                 <br />
                 <span
                     class="text-transparent font-semibold bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400"
@@ -205,7 +214,7 @@
                     </p>
                 </div>
             </section>
-            <p class="flex gap-2 text-gray-400 mr-auto sm:mx-auto">
+            <p class="flex gap-2 text-mauve-400 mr-auto sm:mx-auto">
                 See why developers love Elysia
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -225,15 +234,20 @@
             </p>
         </div>
         <div
-            class="overflow-hidden flex-1 transition-all select-none pointer-events-none"
-            :class="kawaii ? 'lg:flex max-w-4xl' : 'hidden'"
-            style="max-height: calc(100vh - 64px)"
+            class="flex-1 transition-all select-none pointer-events-none my-auto"
+            :class="
+                kawaii
+                    ? 'md:flex max-w-5xl md:max-h-[min(calc(100vh-64px),2100px)]'
+                    : 'hidden'
+            "
         >
             <img
-                src="/assets/elysia_chan.webp"
-                class="object-cover select-none pointer-events-none"
-                style="object-position: 50% 7.5%"
+                src="/illust/ely/rev2/elysia-chan-rev-2-preview.webp"
+                class="w-full md:scale-105 md:-translate-x-[10%] object-contain md:object-cover select-none pointer-events-none"
+                style="object-position: 50% 2vh"
             />
+
+            <div />
         </div>
     </header>
 </template>
@@ -242,6 +256,7 @@
 import { onMounted, ref, watch } from 'vue'
 
 import Ray from './ray.vue'
+import { Sparkle } from 'lucide-vue-next'
 
 const kawaii = ref(false)
 const toggleKawaii = () => {

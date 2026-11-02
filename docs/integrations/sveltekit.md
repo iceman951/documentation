@@ -43,12 +43,18 @@ export const fallback = ({ request }: WithRequest) => app.handle(request) // [!c
 
 You can treat the Elysia server as a normal SvelteKit server route.
 
+### pnpm
+If you use pnpm, [pnpm doesn't auto install peer dependencies by default](https://github.com/orgs/pnpm/discussions/3995#discussioncomment-1893230) forcing you to install additional dependencies manually.
+```bash
+pnpm add @sinclair/typebox openapi-types
+```
+
 ## Prefix
 If you place an Elysia server not in the root directory of the app router, you need to annotate the prefix to the Elysia server.
 
 For example, if you place Elysia server in **src/routes/api/[...slugs]/+server.ts**, you need to annotate prefix as **/api** to Elysia server.
 
-```typescript twoslash
+```typescript
 // src/routes/api/[...slugs]/+server.ts
 import { Elysia, t } from 'elysia';
 

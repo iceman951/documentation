@@ -1,7 +1,7 @@
 <template>
     <div
         ref="refElement"
-        class="spin-in container-style duration-[var(--duration)] ease-[var(--easing)] delay-[var(--delay)] container relative isolate w-280px sm:w-[480px] transition-transform will-change-transform [aspect-ratio:17/21] [contain:layout_style] [perspective:600px]"
+        class="spin-in container-style duration-[var(--duration)] ease-[var(--easing)] delay-[var(--delay)] container relative isolate w-280px sm:w-[480px] transition-transform will-change-transform [aspect-ratio:1/1.586] [contain:layout_style] [perspective:600px]"
         @pointermove="handlePointerMove"
         @pointerenter="handlePointerEnter"
         @pointerleave="handlePointerLeave"
@@ -12,7 +12,7 @@
             <div
                 class="grid size-full mix-blend-soft-light [clip-path:inset(0_0_0_0_round_var(--radius))] [grid-area:1/1]"
             >
-                <div :class="cn('size-full bg-slate-950', props.class)">
+                <div :class="cn('size-full bg-mauve-950', props.class)">
                     <slot />
                 </div>
             </div>

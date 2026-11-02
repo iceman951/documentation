@@ -1,55 +1,33 @@
 <script setup lang="ts">
 import {
     ref,
-    watch,
     nextTick,
     provide,
     onMounted,
     computed,
     defineAsyncComponent,
-    Teleport,
-    onUnmounted
+    Teleport
 } from 'vue'
 import { useData, useRouter } from 'vitepress'
-import ClientOnly from '../../components/xiao/playground/components/client-only.vue'
 import DefaultTheme from 'vitepress/theme-without-fonts'
 
-import { File, Heart, Search, Sparkles, Terminal } from 'lucide-vue-next'
+import { File, Heart, Sparkles, Terminal } from 'lucide-vue-next'
 import mediumZoom from 'medium-zoom'
 
 import useDark from './use-dark'
 
 import Ray from '../../components/fern/ray.vue'
-const GlareCard = defineAsyncComponent(
-    () => import('./glare-card/glare-card.vue')
-)
 const Arona = defineAsyncComponent(
     () => import('../../components/arona/arona.vue')
 )
 
 import { data } from '../../components/fern/sponsor.data'
 import { sponsorOverride } from '../../components/fern/sponsor.constant'
-import ElysiaSearch from './search.vue'
 
 const isDark = useDark()
 const { isDark: darkTheme } = useData()
 
-const showCard = ref(false)
 const showArona = ref(false)
-const showSearch = ref(false)
-
-watch(
-    () => showCard.value,
-    (value) => {
-        if (value) {
-            document.documentElement.classList.add('overflow-hidden')
-            document.body.classList.add('overflow-hidden')
-        } else {
-            document.documentElement.classList.remove('overflow-hidden')
-            document.body.classList.remove('overflow-hidden')
-        }
-    }
-)
 
 const enableTransitions = () =>
     'startViewTransition' in document &&
@@ -66,8 +44,6 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
         const lastSwitchTime = +lastSwitch
 
         if (Date.now() - lastSwitchTime > 3 * 60 * 1000) {
-        	console.log("A")
-
             if (document.documentElement.classList.contains('-animated'))
                 document.documentElement.classList.remove('-animated')
         } else {
@@ -101,7 +77,7 @@ const onNewPage = () => {
 }
 
 function toggleAIDesktop() {
-    showArona.value = !showArona.value
+    showArona.value = true
 
     const backdrop = document.querySelector(
         '.VPBackdrop.backdrop'
@@ -148,67 +124,6 @@ function toggleAIForCurrentPage() {
 </script>
 
 <template>
-    <Teleport to="head">
-        <link
-            rel="preload"
-            as="image"
-            href="/assets/elysia_v.webp"
-            fetchpriority="high"
-        />
-        <link
-            rel="preload"
-            as="image"
-            href="/assets/elysia.svg"
-            fetchpriority="high"
-        />
-        <link
-            rel="preload"
-            as="image"
-            href="/assets/shigure-ui-smol.gif"
-            fetchpriority="low"
-        />
-        <link
-            rel="preload"
-            as="image"
-            href="/assets/elysia-chan-card.webp"
-            fetchpriority="low"
-        />
-
-        <meta
-            id="theme-color"
-            :content="
-                isInTutorial
-                    ? isDark
-                        ? '#ff0000'
-                        : '#ff0000'
-                    : isDark
-                      ? '#0f172a'
-                      : '#ffffff'
-            "
-            media="(prefers-color-scheme: light)"
-        />
-
-        <meta
-            id="theme-color"
-            :content="
-                isInTutorial
-                    ? isDark
-                        ? '#ff0000'
-                        : '#ff0000'
-                    : isDark
-                      ? '#0f172a'
-                      : '#ffffff'
-            "
-            media="(prefers-color-scheme: dark)"
-        />
-    </Teleport>
-
-    <GlareCard v-model="showCard" />
-
-    <ClientOnly>
-        <Arona v-model="showArona" />
-    </ClientOnly>
-
     <DefaultTheme.Layout>
         <template #doc-top>
             <Ray
@@ -220,14 +135,14 @@ function toggleAIForCurrentPage() {
         <template #doc-before>
             <div
                 id="open-elysia-in"
-                class="flex gap-2.5 justify-between items-center pt-0.5 pr-2 text-gray-400 dark:text-gray-500 text-xs mb-1"
+                class="flex gap-2.5 justify-between items-center pt-0.5 pr-2 text-mauve-400 dark:text-mauve-500 text-xs mb-1"
             >
                 <button
                     @click="toggleAIForCurrentPage"
                     class="flex items-center gap-1 clicky pl-2 pr-1 py-1 -translate-x-2 rounded-full interact:text-sky-500 interact:bg-sky-300/15 transition duration-500 ease-out-expo"
                 >
                     <Sparkles :size="16" stroke-width="1.25" />
-                    Ask Elysia <sup>(AI)</sup>
+                    Ask about this page
                 </button>
 
                 <div
@@ -284,20 +199,9 @@ function toggleAIForCurrentPage() {
             </div>
         </template>
 
-        <template #sidebar-nav-after>
-            <div class="mt-auto xl:hidden">
-                <img
-                    src="/assets/elysia-chan-card.webp"
-                    class="clicky aspect-video max-h-24 rounded-lg border object-cover lg:opacity-40 interact:opacity-100 interact:shadow-2xl shadow-gray-700/10 transition-all ease-out duration-200 cursor-pointer"
-                    style="object-position: 0 10%"
-                    @click="showCard = true"
-                />
-            </div>
-        </template>
-
         <template #aside-outline-after>
             <h6
-                class="flex items-center gap-1.5 text-sm font-semibold text-gray-500 dark:text-gray-300 mt-4"
+                class="flex items-center gap-1.5 text-sm font-semibold text-mauve-500 dark:text-mauve-300 mt-4"
             >
                 <Heart :size="16" />
                 Our Sponsors
@@ -322,21 +226,10 @@ function toggleAIForCurrentPage() {
                         :src="sponsor.sponsorEntity.avatarUrl"
                         :alt="sponsor.sponsorEntity.login"
                         :class="`aspect-square rounded-lg opacity-70 hover:opacity-100 focus:opacity-100 transition-opacity`"
-                        style="object-position: 0 10%"
+                        style="object-position: 0 6.25%"
                     />
                 </a>
             </aside>
-
-            <button
-                class="clicky w-48 px-2 mt-2 opacity-60 interact:opacity-100 duration-400 ease-out-expo"
-                @click="showCard = true"
-            >
-                <img
-                    src="/assets/elysia-chan-card.webp"
-                    class="aspect-video rounded-lg object-top object-cover"
-                    style="object-position: 0 10%"
-                />
-            </button>
         </template>
 
         <template #nav-bar-content-before>
@@ -346,22 +239,28 @@ function toggleAIForCurrentPage() {
             >
                 <Sparkles :size="21" stroke-width="1.5" />
             </button>
+
+            <ClientOnly>
+                <Arona v-model="showArona" />
+            </ClientOnly>
         </template>
 
         <template #sidebar-nav-before>
             <button
                 href="/tutorial/"
-                class="clicky font-semibold text-gradient from-25% to-65% from-sky-400 to-teal-400 -translate-x-3"
+                class="clicky font-semibold text-gradient from-25% to-65% from-sky-400 to-teal-400 -mx-3"
                 @click="toggleAIDesktop"
             >
                 <div
-                    class="flex items-center gap-1.5 px-3 py-2 rounded-xl interact:bg-cyan-400/7.5 interact:dark:bg-cyan-300/10 transition-colors"
+                    class="flex items-center gap-2 px-3 py-2 rounded-xl interact:bg-cyan-400/7.5 interact:dark:bg-cyan-300/10 transition-colors"
                 >
-                    <Sparkles
-                        :size="21"
-                        class="text-sky-400"
-                        stroke-width="1.5"
-                    />
+                    <div class="bg-linear-to-br from-sky-400 to-teal-400 p-1.5 rounded-lg">
+                        <Sparkles
+                            :size="15"
+                            class="text-white fill-white"
+                            stroke-width="0.5"
+                        />
+                    </div>
 
                     Ask Elysia
                     <span
@@ -379,12 +278,14 @@ function toggleAIForCurrentPage() {
 
             <a
                 href="/tutorial/"
-                class="clicky font-semibold text-gradient from-fuchsia-400 to-orange-400 dark:from-fuchsia-500 dark:to-orange-500 -translate-x-3"
+                class="clicky font-semibold text-gradient from-fuchsia-400 to-orange-400 dark:from-fuchsia-500 dark:to-orange-500 -mx-3"
             >
                 <div
-                    class="flex items-center gap-1.5 px-3 py-2 rounded-xl interact:bg-pink-400/7.5 interact:dark:bg-pink-300/10 transition-colors"
+                    class="flex items-center gap-2 px-3 py-2 rounded-xl interact:bg-pink-400/7.5 interact:dark:bg-pink-300/10 transition-colors"
                 >
-                    <Terminal :size="21" class="text-pink-400" />
+                    <div class="bg-linear-to-br from-fuchsia-400 to-orange-400 dark:from-fuchsia-500 dark:to-orange-500 p-1.5 rounded-lg">
+                        <Terminal :size="15" class="text-white" />
+                    </div>
 
                     Interactive Tutorial
                 </div>

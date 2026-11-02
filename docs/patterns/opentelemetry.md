@@ -7,20 +7,20 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia that adds support for OpenTelemetry. Start by installing the plugin with "bun add @elysiajs/opentelemetry".
+        content: Plugin for Elysia that adds support for OpenTelemetry. Start by installing the plugin with "bun add @elysia/opentelemetry".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia that adds support for OpenTelemetry. Start by installing the plugin with "bun add @elysiajs/opentelemetry".
+        content: Plugin for Elysia that adds support for OpenTelemetry. Start by installing the plugin with "bun add @elysia/opentelemetry".
 ---
 
 # OpenTelemetry
 
-To start using OpenTelemetry, install `@elysiajs/opentelemetry` and apply plugin to any instance.
+To start using OpenTelemetry, install `@elysia/opentelemetry` and apply plugin to any instance.
 
 ```typescript
 import { Elysia } from 'elysia'
-import { opentelemetry } from '@elysiajs/opentelemetry'
+import { opentelemetry } from '@elysia/opentelemetry'
 
 new Elysia()
 	.use(opentelemetry())
@@ -32,7 +32,7 @@ Why use OpenTelemetry with Elysia?
 - 1 line config
 - Span name is the function name
 - Grouping relevant lifecycle together
-- Wrap a code to record a specific part
+- Wrap code to record a specific part
 - Support Server-Sent Event, and response streaming
 - Compatible with any OpenTelemetry compatible library
 
@@ -45,7 +45,7 @@ Here's an example of exporting telemetry to [Axiom](https://axiom.co)
 
 ```typescript
 import { Elysia } from 'elysia'
-import { opentelemetry } from '@elysiajs/opentelemetry'
+import { opentelemetry } from '@elysia/opentelemetry'
 
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-node'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto'
@@ -72,13 +72,13 @@ new Elysia().use(
 
 Elysia OpenTelemetry is for applying OpenTelemetry to Elysia server only.
 
-You may use OpenTelemetry SDK normally, and the span is run under Elysia's request span, it will be automatically appear in Elysia trace.
+You may use OpenTelemetry SDK normally, and the span is run under Elysia's request span, it will automatically appear in Elysia trace.
 
 However, we also provide a `getTracer`, and `record` utility to collect span from any part of your application.
 
 ```typescript
 import { Elysia } from 'elysia'
-import { record } from '@elysiajs/opentelemetry'
+import { record } from '@elysia/opentelemetry'
 
 export const plugin = new Elysia().get('', () => {
 	return record('database.query', () => {
@@ -89,7 +89,7 @@ export const plugin = new Elysia().get('', () => {
 
 ## Record utility
 
-`record` is an equivalent to OpenTelemetry's `startActiveSpan` but it will handle auto-closing and capture exception automatically.
+`record` is equivalent to OpenTelemetry's `startActiveSpan` but it will handle auto-closing and capture exception automatically.
 
 You may think of `record` as a label for your code that will be shown in trace.
 
@@ -124,7 +124,7 @@ const good = new Elysia()
 `getCurrentSpan` is a utility to get the current span of the current request when you are outside of the handler.
 
 ```typescript
-import { getCurrentSpan } from '@elysiajs/opentelemetry'
+import { getCurrentSpan } from '@elysia/opentelemetry'
 
 function utility() {
 	const span = getCurrentSpan()
@@ -134,14 +134,14 @@ function utility() {
 }
 ```
 
-This works outside of the handler by retriving current span from `AsyncLocalStorage`
+This works outside of the handler by retrieving current span from `AsyncLocalStorage`
 
 ## setAttributes
 
 `setAttributes` is a utility to set attributes to the current span.
 
 ```typescript
-import { setAttributes } from '@elysiajs/opentelemetry'
+import { setAttributes } from '@elysia/opentelemetry'
 
 function utility() {
 	setAttributes({
@@ -170,7 +170,7 @@ To achieve this in Bun, we can
 Let's create a new file in `src/instrumentation.ts`
 
 ```ts [src/instrumentation.ts]
-import { opentelemetry } from '@elysiajs/opentelemetry'
+import { opentelemetry } from '@elysia/opentelemetry'
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg'
 
 export const instrumentation = opentelemetry({
@@ -198,16 +198,16 @@ This will tell Bun to load and setup `instrumentation` before running the `src/i
 ### Deploying to production <Badge type="warning">Advanced Concept</Badge>
 If you are using `bun build` or other bundlers.
 
-As OpenTelemetry rely on monkey-patching `node_modules/<library>`. It's required that make instrumentations works properly, we need to specify that libraries to be instrument is an external module to exclude it from being bundled.
+As OpenTelemetry relies on monkey-patching `node_modules/<library>`. It's required to make instrumentations work properly, we need to specify libraries to be instrumented as an external module to exclude it from being bundled.
 
 For example, if you are using `@opentelemetry/instrumentation-pg` to instrument `pg` library. We need to exclude `pg` from being bundled and make sure that it is importing `node_modules/pg`.
 
-To make this works, we may specified `pg` as an external module with `--external pg`
+To make this work, we may specify `pg` as an external module with `--external pg`
 ```bash
 bun build --compile --external pg --outfile server src/index.ts
 ```
 
-This tells bun to not `pg` bundled into the final output file, and will be imported from the **node_modules** directory at runtime. So on a production server, you must also keeps the **node_modules** directory.
+This tells bun not to bundle `pg` into the final output file, and will be imported from the **node_modules** directory at runtime. So on a production server, you must also keep the **node_modules** directory.
 
 It's recommended to specify packages that should be available in a production server as **dependencies** in **package.json** and use `bun install --production` to install only production dependencies.
 
@@ -217,7 +217,7 @@ It's recommended to specify packages that should be available in a production se
 		"pg": "^8.15.6"
 	},
 	"devDependencies": {
-		"@elysiajs/opentelemetry": "^1.2.0",
+		"@elysia/opentelemetry": "^1.2.0",
 		"@opentelemetry/instrumentation-pg": "^0.52.0",
 		"@types/pg": "^8.11.14",
 		"elysia": "^1.2.25"

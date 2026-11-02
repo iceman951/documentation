@@ -30,7 +30,7 @@ import { code, testcases } from './data'
 
 # Plugin
 
-Every Elysia instance can be plug-and-play with other instances by `use` method.
+Every Elysia instance can be plug-and-play with other instances using the `use` method.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -48,7 +48,7 @@ new Elysia()
 Once applied, all routes from `user` instance will be available in `app` instance.
 
 ### Plugin Config
-You can also create a plugin that takes argument, and returns an Elysia instance to make a more dynamic plugin.
+You can also create a plugin that takes an argument and returns an Elysia instance to make a more dynamic plugin.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -66,6 +66,8 @@ new Elysia()
 	.listen(3000)
 ```
 
+It's also recommended that you read about [Key Concept: Dependency](/key-concept#dependency) to understand how Elysia handles dependencies between plugins.
+
 ## Assignment
 
 Let's apply the `user` instance to the `app` instance.
@@ -77,7 +79,7 @@ Similar to the above example, we can use the `use` method to plug the `user` ins
 ```typescript
 import { Elysia } from 'elysia'
 
-new Elysia()
+const user = new Elysia()
 	.get('/profile', 'User Profile')
 	.get('/settings', 'User Settings')
 

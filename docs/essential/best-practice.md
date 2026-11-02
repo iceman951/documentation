@@ -14,6 +14,10 @@ head:
         content: Elysia is a pattern agnostic framework, we leave the decision up to you and your team for coding patterns to use. However, we found that there are several who are using MVC pattern (Model-View-Controller) on Elysia, and found it's hard to decouple and handle types. This page is a guide to use Elysia with MVC pattern.
 ---
 
+<script setup>
+import AronaBanner from '../components/arona/arona-banner.vue'
+</script>
+
 # Best Practice
 
 Elysia is a pattern-agnostic framework, leaving the decision of which coding patterns to use up to you and your team.
@@ -21,6 +25,8 @@ Elysia is a pattern-agnostic framework, leaving the decision of which coding pat
 However, there are several concerns when trying to adapt an MVC pattern [(Model-View-Controller)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) with Elysia, and we found it hard to decouple and handle types.
 
 This page is a guide on how to follow Elysia structure best practices combined with the MVC pattern, but it can be adapted to any coding pattern you prefer.
+
+<AronaBanner />
 
 ## Folder Structure
 
@@ -53,7 +59,6 @@ Here's an example code of how to distribute your code into a feature-based folde
 ::: code-group
 
 ```typescript [auth/index.ts]
-// Controller handle HTTP related eg. routing, request validation
 import { Elysia } from 'elysia'
 
 import { Auth } from './service'
@@ -66,11 +71,13 @@ export const auth = new Elysia({ prefix: '/auth' })
 			const response = await Auth.signIn(body)
 
 			// Set session cookie
-			session.value = response.token
+			// (Elysia cookie is proxy, it can never be null/undefined)
+			session!.value = response.token
 
 			return response
 		}, {
 			body: AuthModel.signInBody,
+			// response is optional, use to enforce return type
 			response: {
 				200: AuthModel.signInResponse,
 				400: AuthModel.signInInvalid
@@ -80,26 +87,26 @@ export const auth = new Elysia({ prefix: '/auth' })
 ```
 
 ```typescript [auth/service.ts]
-// Service handle business logic, decoupled from Elysia controller
+// Service handles business logic, decoupled from Elysia controller
 import { status } from 'elysia'
 
 import type { AuthModel } from './model'
 
-// If the class doesn't need to store a property,
-// you may use `abstract class` to avoid class allocation
+// If a class doesn't need to store a property,
+// you can use an `abstract class` to avoid class allocation
 export abstract class Auth {
-	static async signIn({ username, password }: AuthModel.signInBody) {
+	static async signIn({ username, password }: AuthModel['signInBody']) {
 		const user = await sql`
 			SELECT password
 			FROM users
 			WHERE username = ${username}
 			LIMIT 1`
 
-		if (await Bun.password.verify(password, user.password))
+		if (!await Bun.password.verify(password, user.password))
 			// You can throw an HTTP error directly
 			throw status(
 				400,
-				'Invalid username or password' satisfies AuthModel.signInInvalid
+				'Invalid username or password' satisfies AuthModel['signInInvalid']
 			)
 
 		return {
@@ -112,48 +119,51 @@ export abstract class Auth {
 
 ```typescript [auth/model.ts]
 // Model define the data structure and validation for the request and response
-import { t } from 'elysia'
+import { t, type UnwrapSchema } from 'elysia'
 
-export namespace AuthModel {
-	// Define a DTO for Elysia validation
-	export const signInBody = t.Object({
+export const AuthModel = {
+	signInBody: t.Object({
 		username: t.String(),
 		password: t.String(),
-	})
-
-	// Define it as TypeScript type
-	export type signInBody = typeof signInBody.static
-
-	// Repeat for other models
-	export const signInResponse = t.Object({
+	}),
+	signInResponse: t.Object({
 		username: t.String(),
 		token: t.String(),
-	})
+	}),
+	signInInvalid: t.Literal('Invalid username or password')
+} as const
 
-	export type signInResponse = typeof signInResponse.static
-
-	export const signInInvalid = t.Literal('Invalid username or password')
-	export type signInInvalid = typeof signInInvalid.static
+// Optional, cast all model to TypeScript type
+export type AuthModel = {
+	[k in keyof typeof AuthModel]: UnwrapSchema<typeof AuthModel[k]>
 }
 ```
 
 :::
 
-Each file has its own responsibility as follows:
-- **Controller**: Handle HTTP routing, request validation, and cookie.
-- **Service**: Handle business logic, decoupled from Elysia controller if possible.
-- **Model**: Define the data structure and validation for the request and response.
+Each file has its own responsibility:
+- **Controller**: Handles HTTP routing, request validation, and cookies.
+- **Service**: Handles business logic, decoupled from the Elysia controller if possible.
+- **Model**: Defines the data structure and validation for the request and response.
 
 Feel free to adapt this structure to your needs and use any coding pattern you prefer.
 
+::: note
+You may get a warning when using `cookie.name` as it might be `undefined` depending on your TypeScript configuration.
+
+Elysia cookie can never be `undefined` because it's a Proxy object. `cookie` is always defined, only its value (via cookie.value) can be undefined.
+
+This can be fixed by using a [cookie schema] or disable [strictNullChecks](https://www.typescriptlang.org/tsconfig/#strictNullChecks) in `tsconfig.json`
+:::
+
 ## Controller
-Due to type soundness of Elysia, it's not recommended to use a traditional controller class that is tightly coupled with Elysia's `Context` because:
+Due to the type soundness of Elysia, it's not recommended to use a traditional controller class that is tightly coupled with Elysia's `Context` because:
 
-1. **Elysia type is complex** and heavily depends on plugin and multiple level of chaining.
-2. **Hard to type**, Elysia type could change at anytime, especially with decorators, and store
-3. **Loss of type integrity**, and inconsistency between types and runtime code.
+1. **Elysia types are complex** and heavily depend on plugins and multiple levels of chaining.
+2. **Hard to type**; Elysia types could change at any time, especially with decorators and store.
+3. **Loss of type integrity** and inconsistency between types and runtime code.
 
-We recommended one of the following approach to implement a controller in Elysia.
+We recommend one of the following approaches to implement a controller in Elysia.
 1. Use Elysia instance as a controller itself
 2. Create a controller that is not tied with HTTP request or Elysia.
 
@@ -196,7 +206,7 @@ This approach makes it hard to type `Context` properly, and may lead to loss of 
 ### 2. Controller without HTTP request
 If you want to create a controller class, we recommend creating a class that is not tied to HTTP request or Elysia at all.
 
-This approach allows you to decouple the controller from Elysia, making it easier to test, reuse, and even swap a framework while still follows the MVC pattern.
+This approach allows you to decouple the controller from Elysia, making it easier to test, reuse, and even swap a framework while still following the MVC pattern.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -211,12 +221,12 @@ new Elysia()
 	.get('/', ({ stuff }) => Controller.doStuff(stuff))
 ```
 
-Tying the controller to Elysia Context may lead to:
+Tying the controller to the Elysia Context may lead to:
 1. Loss of type integrity
-2. Make it harder to test and reuse
-3. Lead to vendor lock-in
+2. Making it harder to test and reuse
+3. Vendor lock-in
 
-We recommended to keep the controller decoupled from Elysia as much as possible.
+We recommend keeping the controller decoupled from Elysia as much as possible.
 
 ### ❌ Don't: Pass entire `Context` to a controller
 **Context is a highly dynamic type** that can be inferred from Elysia instance.
@@ -268,7 +278,7 @@ describe('Controller', () => {
 You may find more information about testing in [Unit Test](/patterns/unit-test.html).
 
 ## Service
-Service is a set of utility/helper functions decoupled as a business logic to use in a module/controller, in our case, an Elysia instance.
+A service is a set of utility/helper functions decoupled as business logic to use in a module/controller, in our case, an Elysia instance.
 
 Any technical logic that can be decoupled from controller may live inside a **Service**.
 
@@ -278,7 +288,7 @@ There are 2 types of service in Elysia:
 
 ### 1. Abstract away Non-request dependent service
 
-We recommend abstracting a service class/function away from Elysia.
+We recommend abstracting service classes/functions away from Elysia.
 
 If the service or function isn't tied to an HTTP request or doesn't access a `Context`, it's recommended to implement it as a static class or function.
 
@@ -302,7 +312,7 @@ new Elysia()
     })
 ```
 
-If your service doesn't need to store a property, you may use `abstract class` and `static` instead to avoid allocating class instance.
+If your service doesn't need to store a property, you can use an `abstract class` and `static` methods to avoid allocating a class instance.
 
 ### 2. Request dependent service as Elysia instance
 
@@ -316,7 +326,8 @@ const AuthService = new Elysia({ name: 'Auth.Service' })
     .macro({
         isSignIn: {
             resolve({ cookie, status }) {
-                if (!cookie.session.value) return status(401)
+                if (!cookie.session.value)
+                	return status(401, 'Unauthorized')
 
                 return {
                 	session: cookie.session.value,
@@ -333,14 +344,14 @@ const UserController = new Elysia()
 ```
 
 ::: tip
-Elysia handles [plugin deduplication](/essential/plugin.html#plugin-deduplication) by default, so you don't have to worry about performance, as it will be a singleton if you specify a **"name"** property.
+Elysia handles [plugin deduplication](/essential/plugin.html#plugin-deduplication) by default, so you don't have to worry about performance, as it will be a singleton if you specify a **"name"** property
 :::
 
 ### ✅ Do: Decorate only request dependent property
 
-It's recommended to `decorate` only request-dependent properties, such as `requestIP`, `requestTime`, or `session`.
+It's recommended to `decorate` only for request-dependent properties, such as `requestIP`, `requestTime`, or `session`.
 
-Overusing decorators may tie your code to Elysia, making it harder to test and reuse.
+Overusing decorators ties your code to Elysia, making it harder to test and reuse.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -400,32 +411,45 @@ However we recommend to avoid this if possible, and use [Elysia as a service](#�
 You may find more about [InferContext](/essential/handler#infercontext) in [Essential: Handler](/essential/handler).-->
 
 ## Model
-Model or [DTO (Data Transfer Object)](https://en.wikipedia.org/wiki/Data_transfer_object) is handle by [Elysia.t (Validation)](/essential/validation.html#elysia-type).
+Models or [DTOs (Data Transfer Objects)](https://en.wikipedia.org/wiki/Data_transfer_object) are handled by [Elysia.t (Validation)](/essential/validation.html#elysia-type).
 
-Elysia has a validation system built-in which can infers type from your code and validate it at runtime.
+Elysia has a built-in validation system that can infer types from your code and validate them at runtime.
 
 ### ✅ Do: Use Elysia's validation system
 
-Elysia strength is prioritizing a single source of truth for both type and runtime validation.
+Elysia's strength is prioritizing a single source of truth for both types and runtime validation.
 
 Instead of declaring an interface, reuse validation's model instead:
 ```typescript twoslash
 // ✅ Do
-import { Elysia, t } from 'elysia'
+import { Elysia, t, type UnwrapSchema } from 'elysia'
 
-const customBody = t.Object({
-	username: t.String(),
-	password: t.String()
-})
+export const models = {
+	customBody: t.Object({
+		username: t.String(),
+		password: t.String()
+	})
+}
 
-// Optional if you want to get the type of the model
-// Usually if we didn't use the type, as it's already inferred by Elysia
-type CustomBody = typeof customBody.static
-    // ^?
+// Optional if you want to extract the type from the model
+type CustomBody = UnwrapSchema<typeof models.customBody>
+//    ^?
 
 
 
-export { customBody }
+
+
+
+// Or make the entire object as type
+type Models = {
+	[k in keyof typeof models]: UnwrapSchema<typeof models[k]>
+}
+
+// ❌ Don't: declare model and type separately
+interface ICustomBody {
+	username: string
+	password: string
+}
 ```
 
 We can get type of model by using `typeof` with `.static` property from the model.
@@ -435,10 +459,12 @@ Then you can use the `CustomBody` type to infer the type of the request body.
 ```typescript twoslash
 import { Elysia, t } from 'elysia'
 
-const customBody = t.Object({
-	username: t.String(),
-	password: t.String()
-})
+const models = {
+	customBody: t.Object({
+		username: t.String(),
+		password: t.String()
+	})	
+}
 // ---cut---
 // ✅ Do
 new Elysia()
@@ -446,7 +472,7 @@ new Elysia()
 	                 // ^?
 		return body
 	}, {
-		body: customBody
+		body: models.customBody
 	})
 ```
 
@@ -470,32 +496,6 @@ interface ICustomBody {
 	username: string
 	password: string
 }
-```
-
-### ❌ Don't: Declare type separate from the model
-Do not declare a type separate from the model, instead use `typeof` with `.static` property to get the type of the model.
-
-```typescript
-// ❌ Don't
-import { Elysia, t } from 'elysia'
-
-const customBody = t.Object({
-	username: t.String(),
-	password: t.String()
-})
-
-type CustomBody = {
-	username: string
-	password: string
-}
-
-// ✅ Do
-const customBody = t.Object({
-	username: t.String(),
-	password: t.String()
-})
-
-type CustomBody = typeof customBody.static
 ```
 
 ### Group
@@ -545,8 +545,8 @@ const UserController = new Elysia({ prefix: '/auth' })
     })
 ```
 
-This approach provide several benefits:
-1. Allow us to name a model and provide auto-completion.
-2. Modify schema for later usage, or perform a [remap](/essential/handler.html#remap).
-3. Show up as "models" in OpenAPI compliance client, eg. OpenAPI.
-4. Improve TypeScript inference speed as model type will be cached during registration.
+This approach provides several benefits:
+1. Allows you to name a model and provide auto-completion.
+2. Modifies schemas for later usage, or performs a [remap](/essential/handler.html#remap).
+3. Shows up as "models" in OpenAPI-compliant clients, eg. OpenAPI.
+4. Improves TypeScript inference speed as model types will be cached during registration.

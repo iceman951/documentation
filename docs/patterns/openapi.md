@@ -18,7 +18,7 @@ head:
 import Tab from '../components/fern/tab.vue'
 </script>
 
-# OpenAPI
+# OpenAPI <TutorialBadge href="/tutorial/features/openapi" />
 
 Elysia has first-class support and follows OpenAPI schema by default.
 
@@ -27,20 +27,20 @@ Elysia can automatically generate an API documentation page by using an OpenAPI 
 To generate the Swagger page, install the plugin:
 
 ```bash
-bun add @elysiajs/openapi
+bun add @elysia/openapi
 ```
 
 And register the plugin to the server:
 
 ```typescript
 import { Elysia } from 'elysia'
-import { openapi } from '@elysiajs/openapi' // [!code ++]
+import { openapi } from '@elysia/openapi' // [!code ++]
 
 new Elysia()
 	.use(openapi()) // [!code ++]
 ```
 
-By default, Elysia uses OpenAPI V3 schema and [Scalar UI](http://scalar.com)
+Accessing `/openapi` would show you a Scalar UI with the generated endpoint documentation from the Elysia server.
 
 For OpenAPI plugin configuration, see the [OpenAPI plugin page](/plugins/openapi).
 
@@ -57,7 +57,7 @@ However, you can also generate OpenAPI documentation from types by using a gener
 2. Import a generator and provide a **file path from project root** to type generator
 ```ts
 import { Elysia, t } from 'elysia'
-import { openapi, fromTypes } from '@elysiajs/openapi' // [!code ++]
+import { openapi, fromTypes } from '@elysia/openapi' // [!code ++]
 
 export const app = new Elysia() // [!code ++]
     .use(
@@ -85,7 +85,7 @@ It's recommended that you should pre-generate the declaration file (**.d.ts**) t
 
 ```ts
 import { Elysia, t } from 'elysia'
-import { openapi, fromTypes } from '@elysiajs/openapi'
+import { openapi, fromTypes } from '@elysia/openapi'
 
 const app = new Elysia()
     .use(
@@ -103,12 +103,40 @@ const app = new Elysia()
 
 <summary>Having issues with type generation?</summary>
 
-### Caveats: Root path
+### Caveat: Explicit types
+OpenAPI Type Gen works best when using implicit types.
+
+Sometimes, explicit types may cause an issue for the generator being unable to resolve properly.
+
+In this case, you can use `Prettify` to inline the type:
+```ts
+import { Elysia, t } from 'elysia'
+
+// Your custom type
+interface User {
+	id: number
+	name: string
+}
+
+// Type helper to inline the type
+type Prettify<T> = { // [!code ++]
+	[K in keyof T]: T[K] // [!code ++]
+} & {} // [!code ++]
+
+// Add Prettify to inline the type
+function getUser(): Prettify<User> { // [!code ++]
+	// Your logic to get user // [!code ++]
+} // [!code ++]
+```
+
+This should fix when type not showing up.
+
+### Caveat: Root path
 As it's unreliable to guess to root of the project, it's recommended to provide the path to the project root to allow generator to run correctly, especially when using monorepo.
 
 ```ts
 import { Elysia, t } from 'elysia'
-import { openapi, fromTypes } from '@elysiajs/openapi'
+import { openapi, fromTypes } from '@elysia/openapi'
 
 export const app = new Elysia()
     .use(
@@ -132,7 +160,7 @@ If you have multiple `tsconfig.json` files, it's important that you must specify
 
 ```ts
 import { Elysia, t } from 'elysia'
-import { openapi, fromTypes } from '@elysiajs/openapi'
+import { openapi, fromTypes } from '@elysia/openapi'
 
 export const app = new Elysia()
     .use(
@@ -174,7 +202,7 @@ As Zod doesn't have a `toJSONSchema` method on the schema, we need to provide a 
 ::: code-group
 
 ```typescript [Zod 4]
-import openapi from '@elysiajs/openapi'
+import openapi from '@elysia/openapi'
 import * as z from 'zod'
 
 openapi({
@@ -185,7 +213,7 @@ openapi({
 ```
 
 ```typescript [Zod 3]
-import openapi from '@elysiajs/openapi'
+import openapi from '@elysia/openapi'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 
 openapi({
@@ -205,7 +233,7 @@ openapi({
 Valibot use a separate package (`@valibot/to-json-schema`) to convert Valibot schema to JSON Schema.
 
 ```typescript
-import openapi from '@elysiajs/openapi'
+import openapi from '@elysia/openapi'
 import { toJsonSchema } from '@valibot/to-json-schema'
 
 openapi({
@@ -223,7 +251,7 @@ openapi({
 As Effect doesn't have a `toJSONSchema` method on the schema, we need to provide a custom mapper to convert Effect schema to OpenAPI schema.
 
 ```typescript
-import openapi from '@elysiajs/openapi'
+import openapi from '@elysia/openapi'
 import { JSONSchema } from 'effect'
 
 openapi({
@@ -237,7 +265,7 @@ openapi({
 
 </Tab>
 
-## Describing route
+## Describing routes
 
 We can add route information by providing a schema type.
 
@@ -245,7 +273,7 @@ However, sometimes defining only a type does not make it clear what the route mi
 
 ```typescript
 import { Elysia, t } from 'elysia'
-import { openapi } from '@elysiajs/openapi'
+import { openapi } from '@elysia/openapi'
 
 new Elysia()
 	.use(openapi())
@@ -276,11 +304,11 @@ The detail fields follows an OpenAPI V3 definition with auto-completion and type
 Detail is then passed to OpenAPI to put the description to OpenAPI route.
 
 ## Response headers
-We can add a response headers by wrapping a schema with `withHeader`:
+We can add response headers by wrapping a schema with `withHeader`:
 
 ```typescript
 import { Elysia, t } from 'elysia'
-import { openapi, withHeader } from '@elysiajs/openapi' // [!code ++]
+import { openapi, withHeader } from '@elysia/openapi' // [!code ++]
 
 new Elysia()
 	.use(openapi())
@@ -310,7 +338,7 @@ You can hide the route from the Swagger page by setting `detail.hide` to `true`
 
 ```typescript
 import { Elysia, t } from 'elysia'
-import { openapi } from '@elysiajs/openapi'
+import { openapi } from '@elysia/openapi'
 
 new Elysia()
 	.use(openapi())
@@ -336,9 +364,9 @@ new Elysia()
 
 ## Tags
 
-Elysia can separate the endpoints into groups by using the Swaggers tag system
+Elysia can separate the endpoints into groups by using the Swagger tag system
 
-Firstly define the available tags in the swagger config object
+Firstly define the available tags in the Swagger config object
 
 ```typescript
 new Elysia().use(
@@ -353,7 +381,7 @@ new Elysia().use(
 )
 ```
 
-Then use the details property of the endpoint configuration section to assign that endpoint to the group
+Then use the detail property of the endpoint configuration section to assign that endpoint to the group
 
 ```typescript
 new Elysia()
@@ -382,7 +410,7 @@ new Elysia()
     )
 ```
 
-Which will produce a swagger page like the following
+This will produce a Swagger page as follows
 <img width="1446" alt="image" src="/assets/swagger-demo.webp">
 
 ### Tags group
@@ -444,9 +472,9 @@ new Elysia()
 
 You can change the OpenAPI endpoint by setting [path](#path) in the plugin config.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
-import { openapi } from '@elysiajs/openapi'
+import { openapi } from '@elysia/openapi'
 
 new Elysia()
     .use(
@@ -461,9 +489,9 @@ new Elysia()
 
 We can customize the OpenAPI information by setting [documentation.info](#documentationinfo) in the plugin config.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
-import { openapi } from '@elysiajs/openapi'
+import { openapi } from '@elysia/openapi'
 
 new Elysia()
     .use(
@@ -482,7 +510,7 @@ new Elysia()
 This can be useful for
 
 - adding a title
-- settings an API version
+- setting an API version
 - adding a description explaining what our API is about
 - explaining what tags are available, what each tag means
 
@@ -520,4 +548,4 @@ export const addressController = new Elysia({
 })
 ```
 
-This will ensures that all endpoints under the `/address` prefix require a valid JWT token for access.
+This will ensure that all endpoints under the `/address` prefix require a valid JWT token for access.

@@ -53,7 +53,7 @@ When we enter a website, it takes
 1. **path** like `/`, `/about`, or `/contact`
 2. **method** like `GET`, `POST`, or `DELETE`
 
-To determine what a resource to show, simply called **"route"**.
+To determine which resource to show, simply called **"route"**.
 
 In Elysia, we can define a route by:
 1. Call method named after HTTP method
@@ -98,7 +98,7 @@ Dynamic paths match some part and capture the value to extract extra information
 
 To define a dynamic path, we can use a colon `:` followed by a name.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -106,7 +106,7 @@ new Elysia()
     .listen(3000)
 ```
 
-Here, a dynamic path is created with `/id/:id`. Which tells Elysia to capture the value `:id` segment with value like **/id/1**, **/id/123**, **/id/anything**.
+Here, a dynamic path is created with `/id/:id`, which tells Elysia to capture the value `:id` segment with value like **/id/1**, **/id/123**, **/id/anything**.
 
 <Playground
   :elysia="demo6"
@@ -125,7 +125,7 @@ See <DocLink href="/essential/route#dynamic-path">Dynamic Path</DocLink>.
 ### Optional path parameters
 We can make a path parameter optional by adding a question mark `?` after the parameter name.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -153,7 +153,7 @@ Dynamic paths allow capturing a single segment while wildcards allow capturing t
 
 To define a wildcard, we can use an asterisk `*`.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()

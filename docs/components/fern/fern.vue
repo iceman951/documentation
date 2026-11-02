@@ -17,15 +17,16 @@ import Sponsors from './sponsor.vue'
 import Banner from './banner.vue'
 import BuiltWithLove from './built-with-love.vue'
 import AskElysia from './ask-elysia.vue'
+// import Teapot from './teapot.vue'
 </script>
 
 <template>
-    <div id="landing" class="dark:bg-gray-900/60">
+    <div id="landing" class="dark:bg-mauve-900/60">
         <Hero />
         <Note />
         <TrustedBy />
         <article
-            class="flex flex-col gap-4 text-gray-500/80 dark:text-gray-400/90 leading-normal text-lg"
+            class="flex flex-col gap-4 text-mauve-500/80 dark:text-mauve-400/90 leading-normal text-lg"
         >
             <Easy>
                 <slot name="easy" />
@@ -90,6 +91,7 @@ import AskElysia from './ask-elysia.vue'
             <!-- <Future /> -->
 
             <AskElysia />
+            <!-- <Teapot /> -->
             <Banner class="mt-10" />
             <BuiltWithLove />
         </article>
@@ -133,11 +135,11 @@ import AskElysia from './ask-elysia.vue'
 }
 
 html.dark pre[class*='language-'] {
-    @apply bg-slate-800;
+    @apply bg-mauve-800;
 }
 
 html.dark {
-    @apply bg-slate-900;
+    @apply bg-mauve-900;
 }
 
 .token.operator,

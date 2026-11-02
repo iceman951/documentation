@@ -76,10 +76,10 @@ Start a development server by:
 bun dev
 ```
 
-Navigate to [localhost:3000](http://localhost:3000) should greet you with "Hello Elysia".
+Navigate to [localhost:3000](http://localhost:3000), which should greet you with "Hello Elysia".
 
 ::: tip
-Elysia ships you with `dev` command to automatically reload your server on file change.
+Elysia provides a `dev` command to automatically reload your server on file changes.
 :::
 
 </template>
@@ -186,22 +186,23 @@ To create a new Elysia app with TypeScript, we recommend installing Elysia with 
 ::: code-group
 
 ```bash [bun]
-bun add elysia @elysiajs/node && \
+bun add elysia @elysia/node && \
 bun add -d tsx @types/node typescript
 ```
 
 ```bash [pnpm]
-pnpm add elysia @elysiajs/node && \
+# pnpm doesn't install peer dependencies
+pnpm add elysia @elysia/node @sinclair/typebox openapi-types && \
 pnpm add -D tsx @types/node typescript
 ```
 
 ```bash [npm]
-npm install elysia @elysiajs/node && \
+npm install elysia @elysia/node && \
 npm install --save-dev tsx @types/node typescript
 ```
 
 ```bash [yarn]
-yarn add elysia @elysiajs/node && \
+yarn add elysia @elysia/node && \
 yarn add -D tsx @types/node typescript
 ```
 
@@ -209,13 +210,13 @@ yarn add -D tsx @types/node typescript
 
 This will install Elysia, TypeScript, and `tsx`.
 
-`tsx` is a CLI that transpiles TypeScript to JavaScript with hot-reload and several more feature you expected from a modern development environment.
+`tsx` is a CLI that transpiles TypeScript to JavaScript with hot-reload and several more features you'd expect from a modern development environment.
 
 Create a new file `src/index.ts` and add the following code:
 
 ```typescript
 import { Elysia } from 'elysia'
-import { node } from '@elysiajs/node'
+import { node } from '@elysia/node'
 
 const app = new Elysia({ adapter: node() })
 	.get('/', () => 'Hello Elysia')
@@ -264,40 +265,39 @@ Don't forget to update `tsconfig.json` to include `compilerOptions.strict` to `t
 <template v-slot:js>
 
 ::: warning
-If you use Elysia without TypeScript you may miss out on some features like auto-completion, advanced type checking and end-to-end type safety, which are the core features of Elysia.
+If you use Elysia without TypeScript, you may miss out on some features like auto-completion, advanced type checking, and end-to-end type safety, which are core features of Elysia.
 :::
 
-To create a new Elysia app with JavaScript, starts by installing Elysia:
+To create a new Elysia app with JavaScript, start by installing Elysia:
 
 ::: code-group
 
-```bash [pnpm]
-bun add elysia @elysiajs/node
+```bash [bun]
+bun add elysia @elysia/node
 ```
 
 ```bash [pnpm]
-pnpm add elysia @elysiajs/node
+# pnpm doesn't install peer dependencies
+pnpm add elysia @elysia/node @sinclair/typebox openapi-types
 ```
 
 ```bash [npm]
-npm install elysia @elysiajs/node
+npm install elysia @elysia/node
 ```
 
 ```bash [yarn]
-yarn add elysia @elysiajs/node
+yarn add elysia @elysia/node
 ```
 
 :::
 
-This will install Elysia, TypeScript, and `tsx`.
+This will install Elysia.
 
-`tsx` is a CLI that transpiles TypeScript to JavaScript with hot-reload and several more feature you expected from a modern development environment.
-
-Create a new file `src/index.ts` and add the following code:
+Create a new file `src/index.js` and add the following code:
 
 ```javascript
 import { Elysia } from 'elysia'
-import { node } from '@elysiajs/node'
+import { node } from '@elysia/node'
 
 const app = new Elysia({ adapter: node() })
 	.get('/', () => 'Hello Elysia')
@@ -312,9 +312,9 @@ Open your `package.json` file and add the following scripts:
 
 ```json
 {
-	"type", "module",
+	"type": "module",
    	"scripts": {
-  		"dev": "node src/index.ts",
+  		"dev": "node src/index.js",
   		"start": "NODE_ENV=production node src/index.js"
    	}
 }
@@ -322,23 +322,12 @@ Open your `package.json` file and add the following scripts:
 
 These scripts refer to the different stages of developing an application:
 
-- **dev** - Start Elysia in development mode with auto-reload on code change.
+- **dev** - Start Elysia in development mode.
 - **start** - Start an Elysia production server.
 
-Make sure to create `tsconfig.json`
-
-```bash
-npx tsc --init
-```
-
-Don't forget to update `tsconfig.json` to include `compilerOptions.strict` to `true`:
-```json
-{
-   	"compilerOptions": {
-  		"strict": true
-   	}
-}
-```
+::: warning
+If you use Elysia without TypeScript, you may miss out on some features like auto-completion, advanced type checking, and end-to-end type safety, which are core features of Elysia.
+:::
 
 </template>
 
@@ -348,7 +337,7 @@ Don't forget to update `tsconfig.json` to include `compilerOptions.strict` to `t
 
 <template v-slot:web-standard>
 
-Elysia is a WinterCG compliance library, which means if a framework or runtime supports Web Standard Request/Response, it can run Elysia.
+Elysia is a WinterTC compliant library, which means if a framework or runtime supports Web Standard Request/Response, it can run Elysia.
 
 First, install Elysia with the command below:
 
@@ -359,7 +348,8 @@ bun install elysia
 ```
 
 ```bash [pnpm]
-pnpm install elysia
+# pnpm doesn't install peer dependencies
+pnpm install elysia @sinclair/typebox openapi-types
 ```
 
 ```bash [npm]
@@ -377,6 +367,9 @@ Next, select a runtime that supports Web Standard Request/Response.
 We have a few recommendations:
 
 <Deck>
+	<Card title="Cloudflare Worker" href="/integrations/cloudflare-worker">
+		Run Elysia on Cloudflare Worker
+    </Card>
     <Card title="Next.js" href="/integrations/nextjs">
    		Elysia as Next.js API routes.
     </Card>
@@ -391,6 +384,9 @@ We have a few recommendations:
     </Card>
 	<Card title="SvelteKit" href="/integrations/sveltekit">
 		Elysia as SvelteKit API routes.
+	</Card>
+	<Card title="Tanstack Start" href="/integrations/tanstack-start">
+		Elysia as Tanstack Start API routes.
 	</Card>
 </Deck>
 

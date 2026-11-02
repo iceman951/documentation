@@ -17,7 +17,7 @@ head:
 # React Email
 React Email is a library that allows you to use React components to create emails.
 
-As Elysia is using Bun as runtime environment, we can directly write a React Email component and import the JSX directly to our code to send emails.
+As Elysia uses Bun as the runtime environment, we can directly write a React Email component and import the JSX directly into our code to send emails.
 
 ## Installation
 To install React Email, run the following command:
@@ -60,18 +60,18 @@ export default function OTPEmail({ otp }: { otp: number }) {
     return (
         <Tailwind>
             <Section className="flex justify-center items-center w-full min-h-screen font-sans">
-                <Section className="flex flex-col items-center w-76 rounded-2xl px-6 py-1 bg-gray-50">
+                <Section className="flex flex-col items-center w-76 rounded-2xl px-6 py-1 bg-mauve-50">
                     <Text className="text-xs font-medium text-violet-500">
                         Verify your Email Address
                     </Text>
-                    <Text className="text-gray-500 my-0">
+                    <Text className="text-mauve-500 my-0">
                         Use the following code to verify your email address
                     </Text>
                     <Text className="text-5xl font-bold pt-2">{otp}</Text>
-                    <Text className="text-gray-400 font-light text-xs pb-4">
+                    <Text className="text-mauve-400 font-light text-xs pb-4">
                         This code is valid for 10 minutes
                     </Text>
-                    <Text className="text-gray-600 text-xs">
+                    <Text className="text-mauve-600 text-xs">
                         Thank you for joining us
                     </Text>
                 </Section>
@@ -89,7 +89,7 @@ You may notice that we are using `@react-email/components` to create the email t
 
 This library provides a set of components including **styling with Tailwind** that are compatible with email clients like Gmail, Outlook, etc.
 
-We also added a `PreviewProps` to the `OTPEmail` function. This is only apply when previewing the email on our playground.
+We also added a `PreviewProps` to the `OTPEmail` function. This only applies when previewing the email on our playground.
 
 ## Preview your email
 To preview your email, run the following command:
@@ -103,7 +103,7 @@ This will open a browser window with the preview of your email.
 ![React Email playground showing an OTP email we have just written](/recipe/react-email/email-preview.webp)
 
 ## Sending email
-To send an email, we can use `react-dom/server` to render the the email then submit using a preferred provider:
+To send an email, we can use `react-dom/server` to render the email, then submit it using a preferred provider:
 
 ::: code-group
 
@@ -260,4 +260,4 @@ new Elysia()
 Notice that we can directly import the email component out of the box thanks to Bun
 :::
 
-You may see all of the available integration with React Email in the [React Email Integration](https://react.email/docs/integrations/overview), and learn more about React Email in [React Email documentation](https://react.email/docs)
+You may see all of the available integrations with React Email in the [React Email Integrations](https://react.email/docs/integrations/overview), and learn more about React Email in the [React Email documentation](https://react.email/docs)

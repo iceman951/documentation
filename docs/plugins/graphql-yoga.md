@@ -7,11 +7,11 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia that adds support for using GraphQL Yoga on the Elysia server. Start by installing the plugin with "bun add graphql graphql-yoga @elysiajs/graphql-yoga".
+        content: Plugin for Elysia that adds support for using GraphQL Yoga on the Elysia server. Start by installing the plugin with "bun add graphql graphql-yoga @elysia/graphql-yoga".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia that adds support for using GraphQL Yoga on the Elysia server. Start by installing the plugin with "bun add graphql graphql-yoga @elysiajs/graphql-yoga".
+        content: Plugin for Elysia that adds support for using GraphQL Yoga on the Elysia server. Start by installing the plugin with "bun add graphql graphql-yoga @elysia/graphql-yoga".
 ---
 
 # GraphQL Yoga Plugin
@@ -21,14 +21,14 @@ This plugin integrates GraphQL yoga with Elysia
 Install with:
 
 ```bash
-bun add @elysiajs/graphql-yoga
+bun add @elysia/graphql-yoga
 ```
 
 Then use it:
 
 ```typescript
 import { Elysia } from 'elysia'
-import { yoga } from '@elysiajs/graphql-yoga'
+import { yoga } from '@elysia/graphql-yoga'
 
 const app = new Elysia()
 	.use(
@@ -50,7 +50,7 @@ const app = new Elysia()
 
 Accessing `/graphql` in the browser (GET request) would show you a GraphiQL instance for the GraphQL-enabled Elysia server.
 
-optional: you can install a custom version of optional peer dependencies as well:
+Optionally, you can install a custom version of optional peer dependencies as well:
 
 ```bash
 bun add graphql graphql-yoga
@@ -66,7 +66,7 @@ You can add custom context to the resolver function by adding **context**
 
 ```ts
 import { Elysia } from 'elysia'
-import { yoga } from '@elysiajs/graphql-yoga'
+import { yoga } from '@elysia/graphql-yoga'
 
 const app = new Elysia()
 	.use(

@@ -20,13 +20,13 @@ import TutorialBadge from '../components/arona/badge.vue'
 
 # Unit Test <TutorialBadge href="/tutorial/features/openapi" />
 
-Being WinterCG compliant, we can use Request / Response classes to test an Elysia server.
+Being WinterTC compliant, we can use Request / Response classes to test an Elysia server.
 
 Elysia provides the **Elysia.handle** method, which accepts a Web Standard [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) and returns [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response), simulating an HTTP Request.
 
 Bun includes a built-in [test runner](https://bun.sh/docs/cli/test) that offers a Jest-like API through the `bun:test` module, facilitating the creation of unit tests.
 
-Create **test/index.test.ts** in the root of project directory with the following:
+Create **test/index.test.ts** in the root of the project directory with the following:
 
 ```typescript
 // test/index.test.ts
@@ -54,7 +54,7 @@ bun test
 
 New requests to an Elysia server must be a fully valid URL, **NOT** a part of a URL.
 
-The request must provide URL as the following:
+The request must provide the URL as follows:
 
 | URL                   | Valid |
 | --------------------- | ----- |
@@ -71,7 +71,7 @@ We may use Eden Treaty to create an end-to-end type safety test for Elysia serve
 // test/index.test.ts
 import { describe, expect, it } from 'bun:test'
 import { Elysia } from 'elysia'
-import { treaty } from '@elysiajs/eden'
+import { treaty } from '@elysia/eden'
 
 const app = new Elysia().get('/hello', 'hi')
 

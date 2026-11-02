@@ -5,6 +5,8 @@
                 v-if="isExpanded && model"
                 class="fixed top-0 left-0 z-41 w-full h-screen bg-black/15"
                 @click="model = false"
+                tabindex="-1"
+                aria-hidden="true"
                 :initial="{ opacity: 0 }"
                 :animate="{
                     opacity: 1,
@@ -28,9 +30,10 @@
             <aside
                 id="arona"
                 v-if="model"
-                class="fixed isolate z-31 bottom-0 sm:bottom-2 right-2 max-w-sm w-full transition-all duration-700 ease-out-expo"
+                class="fixed isolate z-31 bottom-0 sm:bottom-2 w-full transition-all duration-700 ease-out-expo rounded-t-4xl sm:rounded-4xl"
                 :class="{
-                    'z-42 !max-w-3xl !right-1/2 translate-x-1/2': isExpanded
+                    'z-42 max-w-3xl right-1/2 translate-x-1/2': isExpanded,
+                    'max-w-[26rem] right-2': !isExpanded
                 }"
                 style="will-change: transform, width, right"
                 aria-keyshortcuts="Meta+i"
@@ -49,7 +52,7 @@
                 </div>
 
                 <motion.section
-                    class="h-[calc(100dvh-4rem)] bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-t-4xl sm:rounded-4xl shadow-2xl shadow-black/10 overflow-hidden"
+                    class="w-full h-[calc(100dvh-4rem)] rounded-t-4xl sm:rounded-4xl shadow-2xl shadow-black/10 overflow-hidden backdrop-blur-sm border border-mauve-200/75 dark:border-mauve-700/65"
                     :initial="{ opacity: 0, y: 32, scale: 0.95 }"
                     :animate="{
                         opacity: 1,
@@ -72,34 +75,22 @@
                 >
                     <div class="relative isolate flex flex-col w-full h-full">
                         <Ray
-                            class="h-66 !z-10 opacity-20 pointer-events-none"
+                            class="h-66 !z-11 opacity-20 pointer-events-none"
+                        />
+
+                        <div
+                            class="absolute top-0 z-10 left-0 w-full h-24 bg-gradient-to-b from-white/95 from-35% dark:from-mauve-900/95 to-transparent pointer-events-none"
                         />
 
                         <h3
-                            class="absolute z-20 top-2 left-2 flex items-center text-gray-500 font-mono text-lg font-medium h-11 pl-0.5 bg-white/80 dark:bg-gray-800/50 rounded-full backdrop-blur-sm"
+                            class="absolute z-20 top-2 left-2 flex items-center text-mauve-500 font-mono text-lg font-medium h-11 pl-0.5 rounded-full"
                         >
-                            <button
-                                class="clicky flex justify-center items-center size-10 text-gray-400/60 interact:text-gray-500 interact:bg-gray-200/80 dark:interact:bg-gray-700/50 rounded-full !outline-none focus:ring-1 ring-offset-2 transition-all ring-gray-300 duration-300 ease-out-expo"
-                                @click="history = []"
-                                :class="{
-                                    '!w-0 pointer-events-none mr-0':
-                                        isStreaming || !history.length
-                                }"
-                                :disabled="isStreaming || !history.length"
-                                title="Clear chat history"
-                            >
-                                <RotateCcw stroke-width="1.25" />
-                            </button>
-
                             <span
-                                class="transition-transform duration-300 ease-out-expo"
-                                :class="{
-                                    'ml-3': isStreaming || !history.length
-                                }"
+                                class="transition-transform duration-300 ease-out-expo ml-3"
                             >
                                 Elysia chan
                                 <sup
-                                    class="inline-block text-xs scale-75 text-gray-400/60 dark:text-gray-500/60 font-light -translate-x-3"
+                                    class="inline-block text-xs scale-75 text-mauve-400/60 dark:text-mauve-500/60 font-light -translate-x-3"
                                 >
                                     (AI)
                                 </sup>
@@ -107,30 +98,20 @@
                         </h3>
 
                         <section
-                            class="absolute isolate z-20 top-2 right-2 flex p-0.5 bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-full"
+                            class="absolute isolate z-20 top-2 right-2 flex p-0.5 rounded-full"
                         >
-                            <Tooltip
-                                tip="Use current page as primary reference"
-                            >
-                                <label
-                                    class="clicky z-20 interact:z-30 top-2 right-1 flex justify-center items-center size-10 rounded-full !outline-none focus:ring-1 ring-offset-2 duration-300 cursor-pointer"
+                            <Tooltip tip="Start new chat">
+                                <button
+                                    class="clicky flex justify-center items-center size-10 text-mauve-400/60 interact:text-mauve-500 interact:bg-mauve-200/80 dark:interact:bg-mauve-700/50 rounded-full !outline-none focus:ring-1 ring-offset-2 transition-all ring-mauve-300 duration-300 ease-out-expo origin-right"
+                                    @click="startNewChat"
                                     :class="{
-                                        'text-pink-500 dark:text-pink-300 bg-pink-300/15 dark:bg-pink-200/15 ring-pink-500 dark:ring-pink-300':
-                                            includeCurrentPage,
-                                        'text-gray-400/60 interact:text-gray-500 interact:bg-gray-200/80 dark:interact:bg-gray-700/50 ring-gray-300':
-                                            !includeCurrentPage
+                                        '!w-0 pointer-events-none mr-0':
+                                            isStreaming || !history.length
                                     }"
-                                    aria-keyshortcuts="Escape"
-                                    for="elysia-ai-include-current-page"
+                                    :disabled="isStreaming || !history.length"
                                 >
-                                    <Book stroke-width="1.25" />
-                                    <input
-                                        id="elysia-ai-include-current-page"
-                                        type="checkbox"
-                                        class="absolute w-0 h-0 opacity-0 pointer-events-none"
-                                        v-model="includeCurrentPage"
-                                    />
-                                </label>
+                                    <Trash stroke-width="1.25" />
+                                </button>
                             </Tooltip>
 
                             <Tooltip
@@ -141,7 +122,7 @@
                                 "
                             >
                                 <button
-                                    class="clicky z-20 interact:z-30 top-2 right-9 hidden sm:flex justify-center items-center size-10 text-gray-400/60 interact:text-gray-500 interact:bg-gray-200/80 dark:interact:bg-gray-700/50 rounded-full !outline-none focus:ring-1 ring-offset-2 ring-gray-300 duration-300"
+                                    class="clicky z-20 interact:z-30 top-2 right-9 hidden sm:flex justify-center items-center size-10 text-mauve-400/60 interact:text-mauve-500 interact:bg-mauve-200/80 dark:interact:bg-mauve-700/50 rounded-full !outline-none focus:ring-1 ring-offset-2 ring-mauve-300 duration-300"
                                     @click="_isExpanded = !_isExpanded"
                                     :aria-keyshortcuts="
                                         isExpanded
@@ -159,7 +140,7 @@
 
                             <Tooltip tip="Close chat window (Escape)">
                                 <button
-                                    class="clicky z-20 interact:z-30 top-2 right-1 flex justify-center items-center size-10 text-gray-400/60 interact:text-gray-500 interact:bg-gray-200/80 dark:interact:bg-gray-700/50 rounded-full !outline-none focus:ring-1 ring-offset-2 ring-gray-300 duration-300"
+                                    class="clicky z-20 interact:z-30 top-2 right-1 flex justify-center items-center size-10 text-mauve-400/60 interact:text-mauve-500 interact:bg-mauve-200/80 dark:interact:bg-mauve-700/50 rounded-full !outline-none focus:ring-1 ring-offset-2 ring-mauve-300 duration-300"
                                     @click="model = false"
                                     aria-keyshortcuts="Escape"
                                 >
@@ -170,12 +151,12 @@
 
                         <article
                             id="elysia-chat-content"
-                            class="relative flex items-start flex-col w-full h-full pt-15 pb-15 px-2 text-base overflow-x-hidden overflow-y-scroll"
+                            class="relative flex items-start flex-col w-full h-full pt-15 pb-23 px-2 text-base overflow-x-hidden overflow-y-scroll"
                             ref="chatbox"
                         >
                             <AnimatePresence>
                                 <motion.div
-                                    v-if="!history.length"
+                                    v-if="!history.length && !requestSubmit"
                                     :initial="{ opacity: 0, y: 8, scale: 0.95 }"
                                     :animate="{
                                         opacity: 1,
@@ -193,15 +174,15 @@
                                             ease: easeOutExpo
                                         }
                                     }"
-                                    class="absolute flex flex-col justify-center items-center w-full h-[calc(100dvh-8.5rem)] pb-24 text-gray-500 dark:text-gray-400 text-center"
+                                    class="absolute flex flex-col justify-center items-center w-full h-[calc(100dvh-8.5rem)] pb-24 text-mauve-500 dark:text-mauve-400 text-center"
                                 >
                                     <img
                                         class="h-48 mb-3 mt-16"
-                                        src="/elysia/sprite/sit-idle.webp"
+                                        src="/oiia/elysia-hypnosis.webp"
                                         alt="Elysia chan sitting"
                                     />
-                                    <p>Hi~ Did you miss me?</p>
-                                    <p>How's your day?</p>
+                                    <p>Hi~ Did you missed me?</p>
+                                    <p>How can I help you today?</p>
 
                                     <h6 class="text-xs mt-8 mb-2 opacity-75">
                                         Example questions
@@ -215,7 +196,7 @@
                                             ) in questions"
                                             :key="index"
                                             @click="ask(example)"
-                                            class="text-sm px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 interact:text-pink-500 dark:interact:text-pink-300 interact:bg-pink-400/15 dark:interact:bg-pink-300/15 transition-colors"
+                                            class="clicky text-sm px-3 py-1 rounded-full bg-white/40 dark:bg-mauve-700/40 interact:text-pink-500 dark:interact:text-pink-300 interact:bg-pink-400/15 dark:interact:bg-pink-300/15 transition-colors"
                                             v-text="example"
                                         />
                                     </div>
@@ -225,7 +206,16 @@
                             <template
                                 v-for="(
                                     { id, role, content }, index
-                                ) in history"
+                                ) in requestSubmit
+                                    ? [
+                                          {
+                                              id: '',
+                                              role: 'user',
+                                              content: question
+                                          },
+                                          ...history
+                                      ]
+                                    : history"
                                 :key="index"
                             >
                                 <motion.p
@@ -238,7 +228,12 @@
                                         ease: easeOutExpo
                                     }"
                                 >
-                                    {{ content }}
+                                    {{
+                                        content.replace(
+                                            /【([^】]+)】/g,
+                                            '[$1]($1)'
+                                        )
+                                    }}
                                 </motion.p>
 
                                 <motion.div
@@ -274,7 +269,28 @@
                                                 : ''
                                         "
                                     />
+
+                                    <Typing
+                                        v-if="
+                                            isThinking &&
+                                            isStreaming &&
+                                            index === history.length - 1
+                                        "
+                                        class="-translate-y-4"
+                                    />
                                 </motion.div>
+
+                                <p
+                                    class="flex items-center my-2 px-2 text-xs text-mauve-400/75"
+                                    v-if="
+                                        !isStreaming &&
+                                        !error &&
+                                        index === history.length - 1
+                                    "
+                                >
+                                    *AI can make mistakes, verify with included
+                                    references
+                                </p>
 
                                 <aside
                                     class="elysia-chan-tools"
@@ -286,7 +302,7 @@
                                 >
                                     <Tooltip
                                         :tip="
-                                            token === undefined ||
+                                            turnstileToken === undefined ||
                                             powToken === undefined
                                                 ? 'Verifying that you are a human...'
                                                 : 'Regenerate'
@@ -302,7 +318,7 @@
 
                                     <Tooltip
                                         :tip="
-                                            token === undefined ||
+                                            turnstileToken === undefined ||
                                             powToken === undefined
                                                 ? 'Verifying that you are a human...'
                                                 : copied
@@ -361,7 +377,7 @@
 
                                     <Tooltip
                                         :tip="
-                                            token === undefined ||
+                                            turnstileToken === undefined ||
                                             powToken === undefined
                                                 ? 'Verifying that you are a human...'
                                                 : 'Regenerate'
@@ -370,7 +386,7 @@
                                         <button
                                             @click="regenerate(index)"
                                             :disabled="
-                                                token === undefined ||
+                                                turnstileToken === undefined ||
                                                 powToken === undefined
                                             "
                                         >
@@ -399,8 +415,9 @@
 
                             <Typing
                                 v-if="
-                                    isStreaming &&
-                                    history.at(-1)?.role !== 'assistant'
+                                    requestSubmit ||
+                                    (isStreaming &&
+                                        history.at(-1)?.role !== 'assistant')
                                 "
                             />
                         </article>
@@ -412,50 +429,124 @@
                         />
                         <ErrorMessage
                             message="Failed to verify that you're a human."
-                            v-else-if="token === null || powToken === null"
+                            v-else-if="
+                                turnstileToken === null || powToken === null
+                            "
                         />
                         <Verifying
                             v-else-if="
-                                token === undefined || powToken === undefined
+                                turnstileToken === undefined ||
+                                powToken === undefined
                             "
                         />
 
                         <form
-                            class="absolute z-20 bottom-2 left-2 w-[calc(100%-1rem)] flex items-center min-h-11 pr-1.25 bg-gray-200/50 dark:bg-gray-700/50 backdrop-blur-sm rounded-3xl"
+                            class="absolute z-20 bottom-2 left-2 w-[calc(100%-1rem)] flex flex-col min-h-11 bg-white/70 border-r border-b border-white/95 dark:border-mauve-600 dark:bg-mauve-700/70 backdrop-blur-md rounded-3xl"
                             @submit.prevent="ask()"
                         >
                             <textarea
+                                v-if="!requestSubmit"
                                 id="elysia-chan-question"
                                 ref="textarea"
                                 v-model="question"
                                 placeholder="What's on your mind"
-                                class="w-full h-inherit px-4 py-3 resize-none focus:outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                                class="w-full h-inherit px-4 pt-3 resize-none focus:outline-none placeholder:text-mauve-400 dark:placeholder:text-mauve-500"
                                 autofocus
                                 @keydown="handleShortcut"
                                 data-gramm="false"
                             />
-                            <button
-                                class="clicky flex justify-center items-center min-w-10 size-10 disabled:opacity-50 disabled:interact:bg-transparent disabled:interact:scale-100 disabled:cursor-progress rounded-full text-gray-400 dark:text-gray-400/70 interact:bg-pink-300/15 dark:interact:bg-pink-200/15 not-disabled:interact:text-pink-500 not-disabled:dark:interact:text-pink-300 focus:ring ring-offset-2 ring-pink-500 !outline-none transition-all"
-                                :disabled="!token || !powToken"
-                                :title="
-                                    isStreaming
-                                        ? 'Elysia chan is thinking...'
-                                        : token === null || powToken === null
-                                          ? 'Verification failed, please refresh the page.'
-                                          : token === undefined ||
-                                              powToken === undefined
-                                            ? 'Verifying that you are a human...'
-                                            : 'Send message (Cmd/Ctrl + Enter)'
-                                "
-                                @click="cancelRequest()"
+                            <textarea
+                                v-else
+                                id="elysia-chan-question"
+                                ref="textarea"
+                                disabled
+                                value=""
+                                placeholder="What's on your mind"
+                                class="w-full h-inherit px-4 pt-3 resize-none focus:outline-none placeholder:text-mauve-400 dark:placeholder:text-mauve-500"
+                                data-gramm="false"
+                            />
+                            <div
+                                class="flex items-end gap-0.5 w-full px-1.5 pt-1 pb-1.5"
                             >
-                                <Square
-                                    v-if="isStreaming"
-                                    :size="21"
-                                    stroke-width="1.5"
-                                />
-                                <Send v-else :size="21" stroke-width="1.5" />
-                            </button>
+                                <Tooltip tip="Use this page as reference">
+                                    <label
+                                        class="clicky z-20 interact:z-30 top-2 right-1 flex justify-center items-center size-9 rounded-full !outline-none focus:ring-1 ring-offset-2 duration-300 cursor-pointer"
+                                        :class="{
+                                            'text-pink-500 dark:text-pink-300 bg-pink-300/15 dark:bg-pink-200/15 ring-pink-500 dark:ring-pink-300':
+                                                includeCurrentPage,
+                                            'text-mauve-400/60 interact:text-mauve-500 interact:bg-mauve-200/80 dark:interact:bg-mauve-700/50 ring-mauve-300':
+                                                !includeCurrentPage
+                                        }"
+                                        for="elysia-ai-include-current-page"
+                                    >
+                                        <Book stroke-width="1.25" :size="21" />
+                                        <input
+                                            id="elysia-ai-include-current-page"
+                                            type="checkbox"
+                                            class="absolute w-0 h-0 opacity-0 pointer-events-none"
+                                            v-model="includeCurrentPage"
+                                        />
+                                    </label>
+                                </Tooltip>
+                                <Tooltip
+                                    tip="Think harder for more accurate answers (slower answer)"
+                                >
+                                    <label
+                                        class="clicky z-20 interact:z-30 top-2 right-1 flex justify-center items-center size-9 rounded-full !outline-none focus:ring-1 ring-offset-2 duration-300 cursor-pointer"
+                                        :class="{
+                                            'text-pink-500 dark:text-pink-300 bg-pink-300/15 dark:bg-pink-200/15 ring-pink-500 dark:ring-pink-300':
+                                                thinkHarder,
+                                            'text-mauve-400/60 interact:text-mauve-500 interact:bg-mauve-200/80 dark:interact:bg-mauve-700/50 ring-mauve-300':
+                                                !thinkHarder
+                                        }"
+                                        for="elysia-ai-think-harder"
+                                    >
+                                        <Lightbulb
+                                            stroke-width="1.25"
+                                            :size="21"
+                                        />
+                                        <input
+                                            id="elysia-ai-think-harder"
+                                            type="checkbox"
+                                            class="absolute w-0 h-0 opacity-0 pointer-events-none"
+                                            v-model="thinkHarder"
+                                        />
+                                    </label>
+                                </Tooltip>
+
+                                <button
+                                    class="clicky flex justify-center items-center min-w-10 size-10 disabled:opacity-50 disabled:interact:bg-transparent disabled:interact:scale-100 disabled:cursor-progress rounded-full text-mauve-400 dark:text-mauve-400/70 interact:bg-pink-300/15 dark:interact:bg-pink-200/15 not-disabled:interact:text-pink-500 not-disabled:dark:interact:text-pink-300 focus:ring ring-offset-2 ring-pink-500 !outline-none transition-all ml-auto"
+                                    :disabled="
+                                        !isStreaming &&
+                                        (!turnstileToken || !powToken)
+                                    "
+                                    :title="
+                                        isStreaming
+                                            ? 'Elysia chan is thinking...'
+                                            : turnstileToken === null ||
+                                                powToken === null
+                                              ? 'Verification failed, please refresh the page.'
+                                              : turnstileToken === undefined ||
+                                                  powToken === undefined
+                                                ? 'Verifying that you are a human...'
+                                                : 'Send message (Cmd/Ctrl + Enter)'
+                                    "
+                                    @click="
+                                        isStreaming ? cancelRequest() : ask()
+                                    "
+                                >
+                                    <Square
+                                        v-if="isStreaming"
+                                        :size="21"
+                                        stroke-width="1.5"
+                                    />
+                                    <Send
+                                        v-else
+                                        :size="21"
+                                        stroke-width="1.5"
+                                    />
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </motion.section>
@@ -481,15 +572,21 @@ import { motion, AnimatePresence } from 'motion-v'
 
 import { useTextareaAutosize, useWindowSize } from '@vueuse/core'
 
-import { StreamMarkdown } from 'streamdown-vue'
+import {
+    StreamMarkdown,
+    registerDefaultShikiLanguages,
+    registerShikiLanguage
+} from 'streamdown-vue'
 import { vConfetti } from '@neoconfetti/vue'
+import { useWebHaptics } from 'web-haptics/vue'
 
 import Tooltip from './tooltip.vue'
-import A from './a.vue'
 import Code from './code.vue'
 import Verifying from './verifying.vue'
 import ErrorMessage from './error-message.vue'
 import Ray from '../fern/ray.vue'
+
+const { trigger } = useWebHaptics()
 
 import {
     X,
@@ -498,15 +595,15 @@ import {
     Maximize2,
     Minimize2,
     RotateCcw,
-    File,
     Book,
     RefreshCw,
     Copy,
     Check,
-    Loader,
     ThumbsUp,
     ThumbsDown,
-    ArrowUp
+    ArrowUp,
+    Lightbulb,
+    Trash
 } from 'lucide-vue-next'
 import Typing from './typing.vue'
 import { retry } from './retry'
@@ -516,7 +613,6 @@ const Pow = new ComlinkWorker<typeof import('./pow')>(
 )
 
 import useDark from '../../.vitepress/theme/use-dark'
-import { isParameter } from 'typescript'
 
 const model = defineModel<boolean>()
 const isDark = useDark()
@@ -528,22 +624,33 @@ const { input: question, textarea } = useTextareaAutosize()
 
 const size = useWindowSize()
 
+registerDefaultShikiLanguages()
+registerShikiLanguage({
+    id: 'prisma',
+    loader: () => import('@shikijs/langs/prisma')
+})
+
 interface History {
     id?: string
     role: 'user' | 'assistant'
     content: string
+    checksum: string
 }
 
-const questions = ref<string[]>([
+const questions = [
     'What is Eden',
-    'Explain lifecycle events',
+    'Elysia with Node.js',
     'How to add OpenAPI',
-    'Can I use Zod with Elysia?'
-])
+    'Can I use Zod with Elysia?',
+    'What is OpenAPI type gen',
+    'How to separate route file'
+] as const
 
 const includeCurrentPage = ref(false)
+const thinkHarder = ref(false)
 const history = ref<History[]>([])
 const isStreaming = ref(false)
+const isThinking = ref(false)
 const feedback = ref<boolean | null>(null)
 const error = ref<string | undefined>()
 
@@ -554,9 +661,7 @@ const init = ref(false)
 
 let controller: AbortController | undefined
 
-const url = import.meta.env.DEV
-    ? 'http://localhost:3000'
-    : 'https://arona.elysiajs.com'
+const url = import.meta.env.DEV ? 'http://localhost:3000' : 'https://arona.elysiajs.com'
 
 watch(
     () => model.value,
@@ -582,6 +687,8 @@ watch(
                 Pow.request(url)
                     .then((x) => {
                         powToken.value = x
+
+                        if (requestSubmit.value) ask()
                     })
                     .catch(() => {
                         powToken.value = null
@@ -591,47 +698,87 @@ watch(
     }
 )
 
-const token = ref<string | undefined | null>()
+const turnstileToken = ref<string | undefined | null>()
 const powToken = ref<string | undefined | null>()
 
 const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
 const easeOutExpo = [0.16, 1, 0.3, 1] as const
 
 function handleShortcut(event: KeyboardEvent) {
-    const metaKey = event.ctrlKey || event.metaKey
-
-    if (metaKey && event.key === 'Enter') return ask()
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault()
+        return ask()
+    }
 }
+
+let requestSubmit = ref(false)
 
 if (typeof window !== 'undefined')
     // @ts-ignore
     window.toggleAI = ({
         shouldIncludeCurrentPage,
         value,
-        defaultValue
+        defaultValue,
+        submit,
+        clearHistory
     }: {
         shouldIncludeCurrentPage?: boolean
         value?: string
         defaultValue?: string
+        submit?: boolean
+        clearHistory?: boolean
     } = {}) => {
         model.value = !model.value
+
+        if (clearHistory) {
+            history.value = []
+            includeCurrentPage.value = false
+        }
+
+        if (requestSubmit.value) return
 
         if (shouldIncludeCurrentPage !== undefined)
             includeCurrentPage.value = shouldIncludeCurrentPage
 
         if (!question.value) question.value = defaultValue || ''
         if (value) question.value = value
+
+        if (submit) {
+            history.value = []
+            requestSubmit.value = true
+            ask()
+        }
     }
 
 function cancelRequest() {
     isStreaming.value = false
+    isThinking.value = false
 
     if (!controller) return
 
-    token.value = undefined
+    turnstileToken.value = undefined
     controller.abort()
     controller = undefined
     feedback.value = null
+
+    trigger([
+        { duration: 40, intensity: 0.7 },
+        { delay: 40, duration: 40, intensity: 0.7 },
+        { delay: 40, duration: 40, intensity: 0.9 },
+        { delay: 40, duration: 50, intensity: 0.6 }
+    ])
+}
+
+function startNewChat() {
+    cancelRequest()
+    history.value = []
+    error.value = undefined
+    includeCurrentPage.value = false
+
+    trigger([
+        { duration: 80, intensity: 0.8 },
+        { delay: 80, duration: 50, intensity: 0.3 }
+    ])
 }
 
 watch(
@@ -702,8 +849,9 @@ function auth() {
 
 function resetState() {
     isStreaming.value = false
+    isThinking.value = false
     controller = undefined
-    token.value = undefined
+    turnstileToken.value = undefined
     powToken.value = undefined
     feedback.value = null
 }
@@ -730,6 +878,11 @@ function regenerate(index?: number) {
     const latestQuestion = history.value[index - 1].content
     history.value.splice(index, 2)
 
+    trigger([
+        { duration: 80, intensity: 0.8 },
+        { delay: 80, duration: 50, intensity: 0.3 }
+    ])
+
     ask(latestQuestion, ~~(Math.random() * 2_000_000))
 }
 
@@ -746,11 +899,17 @@ function scrollToMessage(index: number) {
             `.elysia-chan-${index}`
         ) as HTMLElement | null
 
-        if (box && message)
+        if (box && message) {
+            trigger([
+                { duration: 30 },
+                { delay: 60, duration: 40, intensity: 1 }
+            ])
+
             box.scrollTo({
                 top: message.offsetTop - box.clientHeight / 3,
                 behavior: 'smooth'
             })
+        }
     })
 }
 
@@ -763,12 +922,34 @@ function copyContent(index: number) {
 
     navigator.clipboard.writeText(content)
     copied.value = true
+    trigger([{ duration: 30 }, { delay: 60, duration: 40, intensity: 1 }])
+
     setTimeout(() => {
         copied.value = false
     }, 2000)
 }
 
+function parseStream(raw: string) {
+    let content = raw.replace(/(^|\n\n)\.{3,}\n\n/g, (_, lead) => lead)
+
+    const tail = /(^|\n\n)\.{3,}$/.exec(content)
+    if (tail) content = content.slice(0, tail.index)
+
+    return { content: content.trimStart(), thinking: tail !== null }
+}
+
 async function ask(input?: string, seed?: number) {
+    if (isStreaming.value || !turnstileToken.value || !powToken.value) return
+
+    const latest = history.value.at(-1)
+    if (input) question.value = input
+    if (!question.value.trim() && latest?.role !== 'user') return
+
+    trigger([{ duration: 30 }, { delay: 60, duration: 40, intensity: 1 }])
+
+    isStreaming.value = true
+    requestSubmit.value = false
+
     let reference = includeCurrentPage.value
         ? 'docs/' +
           location.pathname
@@ -778,26 +959,19 @@ async function ask(input?: string, seed?: number) {
           '.md'
         : undefined
 
-    if (input) question.value = input
     if (
         !reference &&
         (input?.includes('lifecycle') || input?.includes('middleware'))
     )
         reference = 'docs/essential/life-cycle.md'
 
-    const latest = history.value.at(-1)
-
-    if (!question.value.trim() && latest?.role !== 'user') return
-    if (isStreaming.value || !token.value || !powToken.value) return
-
-    isStreaming.value = true
-
     if (latest?.role === 'user')
         question.value = question.value.trim() ? question.value : latest.content
     else
         history.value.push({
             role: 'user',
-            content: question.value
+            content: question.value,
+            checksum: ''
         })
 
     const message = question.value
@@ -806,6 +980,7 @@ async function ask(input?: string, seed?: number) {
     controller = new AbortController()
 
     error.value = undefined
+    includeCurrentPage.value = false
 
     requestAnimationFrame(() => {
         const box = chatbox.value
@@ -816,7 +991,7 @@ async function ask(input?: string, seed?: number) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'x-turnstile-token': token.value!
+            'x-turnstile-token': turnstileToken.value!
         },
         credentials: 'include',
         body: JSON.stringify(
@@ -825,19 +1000,16 @@ async function ask(input?: string, seed?: number) {
                     pow: {
                         suffix: powToken.value
                     },
-                    message,
+                    message:
+                        message.length > 8192
+                            ? message.slice(0, 8192)
+                            : message,
                     history: history.value
                         .slice(-9)
                         .slice(0, -1)
-                        .map(({ id, ...x }) =>
-                            x.content.length < 4096
-                                ? x
-                                : {
-                                      ...x,
-                                      content: x.content.slice(-4096)
-                                  }
-                        )
+                        .map(({ id, ...x }) => x)
                 },
+                thinkHarder.value ? { think: true } : {},
                 seed !== undefined ? { seed } : {},
                 reference ? { reference } : {}
             )
@@ -883,13 +1055,23 @@ async function ask(input?: string, seed?: number) {
     const index = history.value.length
     history.value.push({
         role: 'assistant',
-        content: ''
+        content: '',
+        checksum: ''
     })
 
     const decoder = new TextDecoder()
     const reader = response.body.getReader()
 
+    let content = ''
+    let raw = ''
+    isThinking.value = false
+
     let scroll = false
+    let allowHaptic = true
+    const hapticInterval = setInterval(() => {
+        allowHaptic = true
+    }, 30)
+
     while (true) {
         const { done, value } = await reader.read()
 
@@ -911,17 +1093,42 @@ async function ask(input?: string, seed?: number) {
         }
 
         const text = decoder.decode(value)
-        history.value[index].content += text
+        raw += text
+
+        const parsed = parseStream(raw)
+        isThinking.value = parsed.thinking
+        content = history.value[index].content = parsed.content
+
+        if (allowHaptic) {
+            allowHaptic = false
+            trigger([{ duration: 15 }], { intensity: 0.4 })
+        }
     }
 
-    const getId = /- id:([A-Z|0-9]+)$/g
-    const id = getId.exec(history.value[index].content)
-    if (id) {
-        history.value[index].id = id[1]
-        history.value[index].content = history.value[index].content.replace(
-            getId,
-            ''
+    clearInterval(hapticInterval)
+
+    setTimeout(() => {
+        trigger([{ duration: 30 }, { delay: 60, duration: 40, intensity: 1 }])
+    }, 30)
+
+    const separator = '\n---Elysia-Metadata---'
+    const separatorIndex = content.indexOf(separator)
+
+    if (separatorIndex !== -1) {
+        const metadata = content
+            .slice(separatorIndex + separator.length)
+            .trimStart()
+
+        content = history.value[index].content = content.slice(
+            0,
+            separatorIndex
         )
+
+        const id = /id:(\w+)/g.exec(metadata)?.[1]?.trim()
+        if (id) history.value[index].id = id
+
+        const checksum = /checksum:(\w+)/g.exec(metadata)?.[1]?.trim()
+        if (checksum) history.value[index].checksum = checksum
     }
 
     resetState()
@@ -953,10 +1160,12 @@ function reRouteLink(link: HTMLAnchorElement) {
     })
 }
 
-function turnstileCallback(turnstileToken: string) {
-    if (!turnstileToken) token.value = null
+function turnstileCallback(token: string) {
+    if (!token) turnstileToken.value = null
 
-    token.value = turnstileToken
+    turnstileToken.value = token
+
+    if (requestSubmit.value) ask()
 }
 
 if (typeof window !== 'undefined')
@@ -1035,12 +1244,12 @@ onUnmounted(() => {
     background-image:
         radial-gradient(
             closest-side at center,
-            rgba(255, 255, 255, 1) 70%,
+            rgba(255, 255, 255, 0.35) 70%,
             transparent 150%
         ),
         radial-gradient(
             closest-side at center,
-            rgba(255, 255, 255, 1) 90%,
+            rgba(255, 255, 255, 0.35) 90%,
             transparent 150%
         ),
         radial-gradient(
@@ -1083,13 +1292,13 @@ onUnmounted(() => {
         background-image:
             radial-gradient(
                 closest-side at center,
-                var(--color-gray-800) 70%,
-                transparent 150%
+                theme('--color-mauve-800') 10%,
+                transparent 120%
             ),
             radial-gradient(
                 closest-side at center,
-                var(--color-gray-800) 90%,
-                transparent 150%
+                theme('--color-mauve-800') 10%,
+                transparent 120%
             ),
             radial-gradient(
                 at 9% 67%,
@@ -1098,17 +1307,17 @@ onUnmounted(() => {
             ),
             radial-gradient(
                 at 22% 0%,
-                hsla(210, 100%, 69%, 0.29) 0px,
+                theme('--color-mauve-700') 0px,
                 transparent 50%
             ),
             radial-gradient(
                 at 97% 49%,
-                hsla(240, 100%, 87%, 0.35) 0px,
+                hsla(240, 100%, 87%, 0.175) 0px,
                 transparent 50%
             ),
             radial-gradient(
                 at 100% 75%,
-                hsla(280, 100%, 75%, 0.26) 0px,
+                hsla(280, 100%, 75%, 0.2) 0px,
                 transparent 50%
             ),
             radial-gradient(
@@ -1129,7 +1338,11 @@ onUnmounted(() => {
     }
 
     & > .user {
-        @apply px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-2xl self-end max-w-[80%] whitespace-pre-wrap origin-top-right;
+        @apply px-3 py-1.5 bg-mauve-100 dark:bg-mauve-700 rounded-2xl self-end max-w-[80%] whitespace-pre-wrap origin-top-right;
+
+        &:last-child {
+            @apply mb-4;
+        }
     }
 
     & > .elysia-chan {
@@ -1148,6 +1361,7 @@ onUnmounted(() => {
 
             &:is(ul) {
                 @apply flex flex-wrap gap-x-1 gap-y-2.5 list-none -mx-2;
+                font-size: 0px;
 
                 & > li {
                     @apply text-xs my-0 w-auto;
@@ -1157,7 +1371,11 @@ onUnmounted(() => {
                     }
 
                     & > a {
-                        @apply px-2 py-1 text-gray-400 bg-gray-100/80 dark:bg-gray-700/80 interact:text-pink-500 dark:interact:text-pink-300 interact:bg-pink-300/15 interact:dark:bg-pink-300/15 no-underline cursor-pointer rounded-full transition-colors;
+                        @apply text-sm px-2 py-1 text-mauve-400 bg-white/35 dark:bg-mauve-700/35 interact:text-pink-500 dark:interact:text-pink-300 interact:bg-pink-300/15 interact:dark:bg-pink-300/15 no-underline cursor-pointer rounded-full transition-colors;
+
+                        & > * {
+                            @apply text-sm font-normal font-sans;
+                        }
                     }
                 }
             }
@@ -1192,7 +1410,7 @@ onUnmounted(() => {
                 & > tr,
                 & > tr > th,
                 & > tr > td {
-                    @apply border border-gray-200 dark:border-gray-700;
+                    @apply border border-mauve-200 dark:border-mauve-700;
                 }
             }
         }
@@ -1258,7 +1476,7 @@ onUnmounted(() => {
         }
 
         & > hr {
-            @apply my-4 border-gray-200 dark:border-gray-600;
+            @apply my-4 border-mauve-200 dark:border-mauve-600;
         }
 
         & > p > code,
@@ -1289,8 +1507,7 @@ onUnmounted(() => {
         * > *,
         * > * > * {
             & > div[theme] > .shiki {
-                @apply relative my-4 text-sm -mx-4;
-                background-color: var(--vp-code-copy-code-bg);
+                @apply relative my-4 text-sm -mx-4 bg-mauve-100/35! dark:bg-mauve-900/50! border-y dark:border-mauve-700/75;
 
                 &:hover {
                     & > .lang {
@@ -1303,15 +1520,15 @@ onUnmounted(() => {
                 }
 
                 & > .lang {
-                    @apply absolute top-2 right-2 text-xs text-gray-400 dark:text-gray-500 transition-opacity;
+                    @apply absolute top-2 right-2 text-xs text-mauve-400 dark:text-mauve-500 transition-opacity;
                 }
 
                 & > .copy {
-                    @apply absolute z-20 top-2 right-2 size-10 rounded-xl !bg-gray-50 dark:!bg-gray-800 interact:!bg-white dark:interact:!bg-gray-700 transition-opacity opacity-0;
+                    @apply absolute z-20 top-2 right-2 size-10 rounded-xl !bg-mauve-50 dark:!bg-mauve-800 interact:!bg-white dark:interact:!bg-mauve-700 transition-opacity opacity-0;
                     border: 1px solid var(--vp-code-copy-code-border-color);
 
                     &::before {
-                        @apply absolute flex justify-center items-center translate-y-0.25 size-10 text-gray-400 dark:text-gray-500 !pr-1 !rounded-l-xl;
+                        @apply absolute flex justify-center items-center translate-y-0.25 size-10 text-mauve-400 dark:text-mauve-500 !pr-1 !rounded-l-xl;
 
                         content: '';
                         top: -2.5px;
@@ -1323,17 +1540,17 @@ onUnmounted(() => {
                     }
 
                     &::after {
-                        @apply absolute flex justify-center items-center right-11 w-auto h-10 px-2 text-xs font-medium rounded-l-xl -translate-y-0.25 translate-x-4 text-gray-500 !bg-white !border-r-0 opacity-0 transition-opacity pointer-events-none;
+                        @apply absolute flex justify-center items-center right-11 w-auto h-10 px-2 text-xs font-medium rounded-l-xl -translate-y-0.25 translate-x-4 text-mauve-500 !bg-white !border-r-0 opacity-0 transition-opacity pointer-events-none;
                         border: inherit;
                         content: 'Copied';
                     }
 
                     .dark &::after {
-                        @apply text-gray-400 !bg-gray-700;
+                        @apply text-mauve-400 !bg-mauve-700;
                     }
 
                     &.copied {
-                        @apply !bg-white dark:!bg-gray-700 !pr-1;
+                        @apply !bg-white dark:!bg-mauve-700 !pr-1;
 
                         &::before {
                             background-image: var(--vp-icon-copied);
@@ -1371,15 +1588,15 @@ onUnmounted(() => {
     }
 
     & > .elysia-chan-tools {
-        @apply flex items-end w-full px-1 -translate-y-3 mt-2 text-sm text-gray-400 *:interact:text-pink-500 *:interact:dark:text-pink-300 *:interact:bg-pink-300/15 *:dark:interact:bg-pink-200/15 origin-top-left;
+        @apply flex items-end w-full px-1 -translate-y-3 mt-2 text-sm text-mauve-400 *:interact:text-pink-500 *:interact:dark:text-pink-300 *:interact:bg-pink-300/15 *:dark:interact:bg-pink-200/15 origin-top-left;
         animation: spring-in 0.6s var(--ease-out-expo);
 
         & > button,
         & > a {
-            @apply clicky z-20 interact:z-30 flex justify-center items-center rounded-lg !outline-none focus:ring-1 ring-offset-2 ring-gray-300 duration-300 cursor-pointer;
+            @apply clicky z-20 interact:z-30 flex justify-center items-center rounded-lg !outline-none focus:ring-1 ring-offset-2 ring-mauve-300 duration-300 cursor-pointer;
 
             &:disabled {
-                @apply opacity-60 interact:!bg-transparent !text-gray-400 cursor-progress;
+                @apply opacity-60 interact:!bg-transparent !text-mauve-400 cursor-progress;
             }
         }
 
@@ -1408,6 +1625,39 @@ onUnmounted(() => {
     to {
         transform: scale(1) translateY(0);
         opacity: 1;
+    }
+}
+
+.elysia-thinking {
+    @apply text-sm font-medium w-fit select-none;
+    background: linear-gradient(
+        90deg,
+        theme('--color-mauve-400') 35%,
+        theme('--color-mauve-200') 50%,
+        theme('--color-mauve-400') 65%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: text-shimmer 1.6s linear infinite;
+}
+
+html.dark .elysia-thinking {
+    background: linear-gradient(
+        90deg,
+        theme('--color-mauve-500') 35%,
+        theme('--color-mauve-300') 50%,
+        theme('--color-mauve-500') 65%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+@keyframes text-shimmer {
+    to {
+        background-position: -200% 0;
     }
 }
 </style>

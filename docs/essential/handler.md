@@ -29,7 +29,7 @@ const handler2 = new Elysia()
 
 # Handler <TutorialBadge href="/tutorial/getting-started/handler-and-context" />
 
-**Handler** - a function that accept an HTTP request, and return a response.
+**Handler** - a function that accepts an HTTP request and returns a response.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -65,7 +65,7 @@ Static resource values, headers and status can be mutated dynamically using life
 
 **Context** contains request information which is unique for each request, and is not shared except for `store` <small>(global mutable state)</small>.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -77,7 +77,7 @@ new Elysia()
 
 #### Property
 -   [**body**](/essential/validation.html#body) - [HTTP message](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages), form or file upload.
--   [**query**](/essential/validation.html#query) - [Query String](https://en.wikipedia.org/wiki/Query_string), include additional parameters for search query as JavaScript Object. (Query is extracted from a value after pathname starting from '?' question mark sign)
+-   [**query**](/essential/validation.html#query) - [Query String](https://en.wikipedia.org/wiki/Query_string), includes additional parameters for search query as JavaScript Object. (Query is extracted from a value after pathname starting from '?' question mark sign)
 -   [**params**](/essential/validation.html#params) - Elysia's path parameters parsed as JavaScript object
 -   [**headers**](/essential/validation.html#headers) - [HTTP Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers), additional information about the request like User-Agent, Content-Type, Cache Hint.
 -   [**cookie**](#cookie) - A global mutable signal store for interacting with Cookie (including get/set)
@@ -107,8 +107,8 @@ new Elysia()
 
 <Playground :elysia="handler2" />
 
-It's recommended use **never-throw** approach to return **status** instead of throw as it:
-- allows TypeScript to check if a return value is correctly type to response schema
+It's recommended to use the **never-throw** approach to return **status** instead of throwing as it:
+- allows TypeScript to check if a return value is correctly typed to the response schema
 - autocompletion for type narrowing based on status code
 - type narrowing for error handling using End-to-end type safety ([Eden](/eden/overview))
 
@@ -133,9 +133,9 @@ new Elysia()
 
 ## Set
 
-**set** is a mutable property that form a response accessible via `Context.set`.
+**set** is a mutable property that forms a response accessible via `Context.set`.
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -148,9 +148,9 @@ new Elysia()
 ```
 
 ### set.headers
-Allowing us to append or delete response headers represented as an Object.
+Allows us to append or delete response headers represented as an Object.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -163,7 +163,7 @@ new Elysia()
 ```
 
 ::: tip
-Elysia provide an auto-completion for lowercase for case-sensitivity consistency, eg. use `set-cookie` rather than `Set-Cookie`.
+Elysia provides auto-completion for lowercase for case-sensitivity consistency, eg. use `set-cookie` rather than `Set-Cookie`.
 :::
 
 <details>
@@ -174,7 +174,7 @@ redirect <Badge type="warning">Legacy</Badge>
 
 Redirect a request to another resource.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -202,7 +202,7 @@ Set a default status code if not provided.
 
 It's recommended to use this in a plugin that only needs to return a specific status code while allowing the user to return a custom value. For example, HTTP 201/206 or 403/405, etc.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -215,7 +215,7 @@ new Elysia()
     .listen(3000)
 ```
 
-Unlike `status` function, `set.status` cannot infer the return value type, therefore it can't check if the return value is correctly type to response schema.
+Unlike the `status` function, `set.status` cannot infer the return value type, therefore it can't check if the return value is correctly typed to the response schema.
 
 ::: tip
 HTTP Status indicates the type of response. If the route handler is executed successfully without error, Elysia will return the status code 200.
@@ -223,14 +223,12 @@ HTTP Status indicates the type of response. If the route handler is executed suc
 
 You can also set a status code using the common name of the status code instead of using a number.
 
-```typescript twoslash
-// @errors 2322
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
     .get('/', ({ set }) => {
-        set.status
-          // ^?
+        set.status = 418
 
         return 'Kirifuji Nagisa'
     })
@@ -240,11 +238,11 @@ new Elysia()
 </details>
 
 ## Cookie
-Elysia provides a mutable signal for interacting with Cookie.
+Elysia provides a mutable store for interacting with cookies.
 
-There's no get/set, you can extract the cookie name and retrieve or update its value directly.
+There's no need for get/set; you can extract the cookie name and retrieve or update its value directly.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -257,12 +255,12 @@ new Elysia()
 	})
 ```
 
-See [Patterns: Cookie](/essentials/cookie) for more information.
+See [Patterns: Cookie](/patterns/cookie) for more information.
 
 ## Redirect
 Redirect a request to another resource.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 new Elysia()
@@ -279,7 +277,7 @@ new Elysia()
 When using redirect, returned value is not required and will be ignored. As response will be from another resource.
 
 ## Formdata
-We may return a `FormData` by using returning `form` utility directly from the handler.
+We can return a `FormData` by returning the `form` utility directly from the handler.
 
 ```typescript
 import { Elysia, form, file } from 'elysia'
@@ -292,7 +290,7 @@ new Elysia()
 	.listen(3000)
 ```
 
-This pattern is useful if even need to return a file or multipart form data.
+This pattern is useful if you ever need to return a file or multipart form data.
 
 ### Return a file
 Or alternatively, you can return a single file by returning `file` directly without `form`.
@@ -306,7 +304,7 @@ new Elysia()
 ```
 
 ## Stream
-To return a response streaming out of the box by using a generator function with `yield` keyword.
+To return a response streaming out of the box, use a generator function with the `yield` keyword.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -319,12 +317,12 @@ const app = new Elysia()
 	})
 ```
 
-This this example, we may stream a response by using `yield` keyword.
+In this example, we stream a response by using the `yield` keyword.
 
 ## Server Sent Events (SSE)
 Elysia supports [Server Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) by providing a `sse` utility function.
 
-```typescript twoslash
+```typescript
 import { Elysia, sse } from 'elysia'
 
 new Elysia()
@@ -346,7 +344,7 @@ When a value is wrapped in `sse`, Elysia will automatically set the response hea
 
 Headers can only be set before the first chunk is yielded.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 const app = new Elysia()
@@ -388,9 +386,9 @@ Before response streaming is completed, if the user cancels the request, Elysia 
 ### Eden
 [Eden](/eden/overview) will interpret a stream response as `AsyncGenerator` allowing us to use `for await` loop to consume the stream.
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
-import { treaty } from '@elysiajs/eden'
+import { treaty } from '@elysia/eden'
 
 const app = new Elysia()
 	.get('/ok', function* () {
@@ -419,7 +417,7 @@ new Elysia()
 	.listen(3000)
 ```
 
-Allowing you to access low-level request information if necessary.
+This allows access to low-level request information if necessary.
 
 ## Server <Badge type="warning">Bun only</Badge>
 Server instance is a Bun server instance, allowing us to access server information like port number or request IP.
@@ -449,8 +447,8 @@ new Elysia()
 	.listen(3000)
 ```
 
-## Extends context <Badge type="warning">Advance concept</Badge>
+## Extending context <Badge type="warning">Advanced concept</Badge>
 
-Elysia provides a minimal Context by default, allowing us to extend Context for our specific need using state, decorate, derive, and resolve.
+Elysia provides a minimal Context by default, allowing you to extend the Context for your specific needs using state, decorate, derive, and resolve.
 
 See [Extends Context](/patterns/extends-context) for more information on how to extend a Context.

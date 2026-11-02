@@ -90,7 +90,7 @@ You can validate the following property:
 - `cookie`
 - `response`
 
-Once schema is defined, Elysia will infers type for you so You don't have to define a separate schema in TypeScript.
+Once a schema is defined, Elysia will infer types for you so you don't have to define a separate schema in TypeScript.
 
 See <DocLink href="/essential/validation#schema-type">Schema Type</DocLink> for each type.
 
@@ -125,18 +125,21 @@ Let's exercise what we have learned.
 
 <template #answer>
 
-We can define a schema by using `t.Object` provide to `body` property.
+We can define a schema by using `t.Object` provided to the `body` property.
 
 ```typescript
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 
 new Elysia()
-	.get('/', ({ status, set }) => {
-		set.headers['x-powered-by'] = 'Elysia'
-
-		return status(418, 'Hello Elysia!')
-	})
-	.get('/docs', ({ redirect }) => redirect('https://elysiajs.com'))
+	.post(
+		'/user',
+		({ body: { name } }) => `Hello ${name}!`,
+		{
+			body: t.Object({
+				name: t.String()
+			})
+		}
+	)
 	.listen(3000)
 ```
 

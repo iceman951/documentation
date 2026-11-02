@@ -7,11 +7,11 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia that adds support for using JWT (JSON Web Token) in Elysia server. Start by installing the plugin with "bun add @elysiajs/jwt".
+        content: Plugin for Elysia that adds support for using JWT (JSON Web Token) in Elysia server. Start by installing the plugin with "bun add @elysia/jwt".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia that adds support for using JWT (JSON Web Token) in Elysia server. Start by installing the plugin with "bun add @elysiajs/jwt".
+        content: Plugin for Elysia that adds support for using JWT (JSON Web Token) in Elysia server. Start by installing the plugin with "bun add @elysia/jwt".
 ---
 
 # JWT Plugin
@@ -19,7 +19,7 @@ This plugin adds support for using JWT in Elysia handlers.
 
 Install with:
 ```bash
-bun add @elysiajs/jwt
+bun add @elysia/jwt
 ```
 
 Then use it:
@@ -28,7 +28,7 @@ Then use it:
 
 ```typescript [cookie]
 import { Elysia } from 'elysia'
-import { jwt } from '@elysiajs/jwt'
+import { jwt } from '@elysia/jwt'
 
 const app = new Elysia()
     .use(
@@ -62,7 +62,7 @@ const app = new Elysia()
 
 ```typescript [headers]
 import { Elysia } from 'elysia'
-import { jwt } from '@elysiajs/jwt'
+import { jwt } from '@elysia/jwt'
 
 const app = new Elysia()
     .use(
@@ -115,7 +115,7 @@ Because some might need to use multiple `jwt` with different configs in a single
 The private key to sign JWT payload with.
 
 ### schema
-Type strict validation for JWT payload.
+Strict type validation for JWT payload.
 
 ---
 Below is a config that extends from [cookie](https://npmjs.com/package/cookie)
@@ -203,7 +203,7 @@ Content-Type parameter is used by JWS applications to declare the media type [IA
 This is intended for use by the application when more than one kind of object could be present in the JWS Payload as per [RFC7515](https://www.rfc-editor.org/rfc/rfc7515#section-4.1.9)
 
 ## Handler
-Below are the value added to the handler.
+Below are the values added to the handler.
 
 ### jwt.sign
 A dynamic object of collection related to use with JWT registered by the JWT plugin.

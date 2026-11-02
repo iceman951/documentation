@@ -27,6 +27,13 @@ head:
 <Blogs
   :blogs="[
       {
+        title: 'Elysia 2 beta - DayDream',
+		href: '/blog/elysia-20',
+		cover: 'elysia-20.webp',
+		detail: 'Entire rewritten Elysia from the ground up. Focusing on performance, memory usage, startup time and bundle size. Elysia 2 is a new era of Elysia, with a new architecture and featuring Ahead of Time (AOT) compilation.',
+		date: '30 Jul 2026'
+      },
+      {
         title: '2x faster than Encore - 1 year later',
 		href: '/blog/elysia-v-encore',
 		cover: 'elysia-v-encore.webp',
@@ -86,7 +93,7 @@ head:
         title: 'Introducing Elysia 0.6 - This Game',
         href: '/blog/elysia-06',
         cover: 'this-game.webp',
-        detail: 'Introducing re-imagined plugin model, dynamic mode, better developer experience with declarative custom error, customizable loose and strict path mapping, TypeBox 0.30 and WinterCG framework interlop. Pushing the boundary of what is possible once again'
+        detail: 'Introducing re-imagined plugin model, dynamic mode, better developer experience with declarative custom error, customizable loose and strict path mapping, TypeBox 0.30 and WinterTC framework interlop. Pushing the boundary of what is possible once again'
       },
       {
         title: 'Accelerate your next Prisma server with Elysia',

@@ -7,11 +7,11 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia that adds support for serving static files/folders for Elysia Server. Start by installing the plugin with "bun add @elysiajs/static".
+        content: Plugin for Elysia that adds support for serving static files/folders for Elysia Server. Start by installing the plugin with "bun add @elysia/static".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia that adds support for serving static files/folders for Elysia Server. Start by installing the plugin with "bun add @elysiajs/static".
+        content: Plugin for Elysia that adds support for serving static files/folders for Elysia Server. Start by installing the plugin with "bun add @elysia/static".
 ---
 
 # Static Plugin
@@ -19,13 +19,13 @@ This plugin can serve static files/folders for Elysia Server
 
 Install with:
 ```bash
-bun add @elysiajs/static
+bun add @elysia/static
 ```
 
 Then use it:
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
-import { staticPlugin } from '@elysiajs/static'
+import { staticPlugin } from '@elysia/static'
 
 new Elysia()
     .use(staticPlugin())
@@ -85,7 +85,7 @@ Set response headers of files
 ### indexHTML
 @default `false`
 
-If set to true, the `index.html` file from the static directory will be served for any request that is matching neither a route nor any existing static file.
+If set to true, the `index.html` file from the static directory will be served for any request that matches neither a route nor any existing static file.
 
 ## Pattern
 Below you can find the common patterns to use the plugin.

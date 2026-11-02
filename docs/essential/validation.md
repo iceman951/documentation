@@ -48,7 +48,7 @@ const demo2 = new Elysia()
 const demo3 = new Elysia()
  	.guard({
         query: t.Object({
-            name: t.Number()
+            id: t.Number()
         })
     })
     .get('/query?id=1', ({ query: { id } }) => id)
@@ -67,11 +67,9 @@ const demo4 = new Elysia()
 
 # Validation <TutorialBadge href="/tutorial/getting-started/validation" />
 
-The purpose of creating an API server is to take an input and process it.
+Elysia provides a schema to validate data out of the box to ensure that the data is in the correct format.
 
-JavaScript allows any data to be of any type. Elysia provides a tool to validate data out of the box to ensure that the data is in the correct format.
-
-```typescript twoslash
+```typescript
 import { Elysia, t } from 'elysia'
 
 new Elysia()
@@ -87,10 +85,10 @@ new Elysia()
 
 **Elysia.t** is a schema builder based on [TypeBox](https://github.com/sinclairzx81/typebox) that provides type-safety at runtime, compile-time, and OpenAPI schema generation from a single source of truth.
 
-Elysia tailor TypeBox for server-side validation for a seamless experience.
+Elysia tailors TypeBox for server-side validation for a seamless experience.
 
 ### Standard Schema
-Elysia also support [Standard Schema](https://github.com/standard-schema/standard-schema), allowing you to use your favorite validation library:
+Elysia also supports [Standard Schema](https://github.com/standard-schema/standard-schema), allowing you to use your favorite validation library:
 - Zod
 - Valibot
 - ArkType
@@ -175,7 +173,7 @@ The response should be as follows:
 | /id/a?name=Elysia | ✅ | ❌ |
 | /id/a?alias=Elysia | ❌ | ❌ |
 
-When a schema is provided, the type will be inferred from the schema automatically and an OpenAPI type will be generated for an API documentation, eliminating the redundant task of providing the type manually.
+When a schema is provided, the type will be inferred from the schema automatically and an OpenAPI type will be generated for API documentation, eliminating the redundant task of providing the type manually.
 
 ## Guard
 
@@ -227,13 +225,13 @@ Guard supports 2 types to define a validation.
 
 ### **override (default)**
 
-Override schema if schema is collide with each others.
+Override schemas if they collide with each other.
 
 ![Elysia run with default override guard showing schema gets override](/blog/elysia-13/schema-override.webp)
 
 ### **standalone** <TutorialBadge href="/tutorial/patterns/standalone-schema" />
 
-Separate collided schema, and runs both independently resulting in both being validated.
+Separate collided schemas, and run both independently resulting in both being validated.
 
 ![Elysia run with standalone merging multiple guard together](/blog/elysia-13/schema-standalone.webp)
 
@@ -251,7 +249,7 @@ new Elysia()
 ```
 
 ## Body
-An incoming [HTTP Message](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages) is the data sent to the server. It can be in the form of JSON, form-data, or any other format.
+An [HTTP message](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages) is data sent to the server. It can be in the form of JSON, form-data, or any other format.
 
 ```typescript twoslash
 import { Elysia, t } from 'elysia'
@@ -287,7 +285,7 @@ Most browsers disable the attachment of the body by default for **GET** and **HE
 #### Specs
 Validate an incoming [HTTP Message](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages) (or body).
 
-These messages are additional messages for the web server to process.
+These are additional messages for the web server to process.
 
 The body is provided in the same way as the `body` in `fetch` API. The content type should be set accordingly to the defined body.
 
@@ -325,11 +323,11 @@ new Elysia()
 By providing a file type, Elysia will automatically assume that the content-type is `multipart/form-data`.
 
 ### File (Standard Schema)
-If you're using Standard Schema, it's important that Elysia will not be able to validate content type automatically similar to `t.File`.
+If you're using Standard Schema, it's important to note that Elysia will not be able to validate content type automatically similar to `t.File`.
 
 But Elysia export a `fileType` that can be used to validate file type by using magic number.
 
-```typescript twoslash
+```typescript
 import { Elysia, fileType } from 'elysia'
 import { z } from 'zod'
 
@@ -341,7 +339,7 @@ new Elysia()
 	})
 ```
 
-It's very important that you **should use** `fileType` to validate the file type as **most validator doesn't actually validate the file** correctly, like checking the content type the value of it which can lead to security vulnerability.
+It's very important that you **should use the `fileType` utility to** validate the file type as **most validators don't actually validate the file** correctly, like checking the content type value which can lead to security vulnerabilities.
 
 ## Query
 Query is the data sent through the URL. It can be in the form of `?key=value`.
@@ -376,7 +374,7 @@ The validation should be as follows:
 
 #### Specs
 
-A query string is a part of the URL that starts with **?** and can contain one or more query parameters, which are key-value pairs used to convey additional information to the server, usually for customized behavior like filtering or searching.
+A query string is part of the URL that starts with **?** and can contain one or more query parameters, which are key-value pairs used to convey additional information to the server, usually for customized behavior like filtering or searching.
 
 ![URL Object](/essential/url-object.svg)
 
@@ -386,7 +384,7 @@ Query is provided after the **?** in Fetch API.
 fetch('https://elysiajs.com/?name=Elysia')
 ```
 
-When specifying query parameters, it's crucial to understand that all query parameter values must be represented as strings. This is due to how they are encoded and appended to the URL.
+When specifying query parameters, it's crucial to understand that all query parameter values are represented as strings. This is due to how they are encoded and appended to the URL.
 
 ### Coercion
 Elysia will coerce applicable schema on `query` to respective type automatically.
@@ -404,7 +402,7 @@ new Elysia()
 
 
 		query: t.Object({ // [!code ++]
-			name: t.Number() // [!code ++]
+			id: t.Number() // [!code ++]
 		}) // [!code ++]
 	})
 	.listen(3000)
@@ -423,9 +421,9 @@ new Elysia()
 />
 
 ### Array
-By default, Elysia treat query parameters as a single string even if specified multiple time.
+By default, Elysia treats query parameters as a single string even if specified multiple times.
 
-To use array, we need to explicitly declare it as an array.
+To use arrays, we need to explicitly declare them as arrays.
 
 ```ts twoslash
 import { Elysia, t } from 'elysia'
@@ -480,7 +478,7 @@ http://localhost?name=rapi,anis,neon&squad=counter
 ```
 
 #### HTML form format
-If a key is assigned multiple time, the key will be treated as an array.
+If a key is assigned multiple times, the key will be treated as an array.
 
 This is similar to HTML form format when an input with the same name is specified multiple times.
 
@@ -521,9 +519,9 @@ The validation should be as follows:
 | /id/a | ❌ |
 
 #### Specs
-Path parameter <small>(not to be confused with query string or query parameter)</small>.
+Path parameters <small>(not to be confused with query string or query parameter)</small>.
 
-**This field is usually not needed as Elysia can infer types from path parameters automatically**, unless there is a need for a specific value pattern, such as a numeric value or template literal pattern.
+**This is usually not needed as Elysia can infer types from path parameters automatically**, unless there is a need for a specific value pattern, such as a numeric value or template literal pattern.
 
 ```typescript
 fetch('https://elysiajs.com/id/1')
@@ -607,7 +605,7 @@ Same as `headers`, cookies have `additionalProperties` set to `true` by default.
 
 #### Specs
 
-An HTTP cookie is a small piece of data that a server sends to the client. It's data that is sent with every visit to the same web server to let the server remember client information.
+An HTTP cookie is a small piece of data that a server sends to the client. It's data sent with every visit to the same web server to let the server remember client information.
 
 In simpler terms, it's a stringified state that is sent with every request.
 
@@ -996,7 +994,7 @@ Expected value to be an object
 
 We can customize the behavior of validation based on the [onError](/essential/life-cycle.html#on-error) event by narrowing down the error code to "**VALIDATION**".
 
-```typescript twoslash
+```typescript
 import { Elysia, t } from 'elysia'
 
 new Elysia()
@@ -1024,7 +1022,7 @@ new Elysia()
 
 ### Error List
 
-**ValidationError** provides a method `ValidatorError.all`, allowing us to list all of the error causes.
+**ValidationError** provides a method `ValidationError.all`, allowing us to list all of the error causes.
 
 ```typescript
 import { Elysia, t } from 'elysia'
@@ -1065,7 +1063,7 @@ Let's start with a simple scenario.
 
 Suppose we have a controller that handles sign-in with the same model.
 
-```typescript twoslash
+```typescript
 import { Elysia, t } from 'elysia'
 
 const app = new Elysia()
@@ -1082,7 +1080,7 @@ const app = new Elysia()
 ```
 
 We can refactor the code by extracting the model as a variable and referencing it.
-```typescript twoslash
+```typescript
 import { Elysia, t } from 'elysia'
 
 // Maybe in a different file eg. models.ts
@@ -1102,7 +1100,7 @@ This method of separating concerns is an effective approach, but we might find o
 
 We can resolve that by creating a "reference model", allowing us to name the model and use auto-completion to reference it directly in `schema` by registering the models with `model`.
 
-```typescript twoslash
+```typescript
 import { Elysia, t } from 'elysia'
 
 const app = new Elysia()
@@ -1163,6 +1161,48 @@ const app = new Elysia()
 ```
 
 This approach not only allows us to separate concerns but also enables us to reuse the model in multiple places while integrating the model into OpenAPI documentation.
+
+<!--### Getting type from model
+To get stored models from `Elysia.model`, we can access the `models` property follows by `name.Schema()` to get the schema definition.
+
+```typescript twoslash
+import { Elysia, t } from 'elysia'
+import * as z from 'zod'
+
+const app = new Elysia()
+	.model({
+		sign: t.Object({
+			username: t.String(),
+			password: t.String()
+		}),
+		zodSign: z.object({
+			username: z.string(),
+			password: z.string()
+		})
+	})
+
+// For TypeBox
+const sign = app.models.sign.schema
+type sign = typeof sign.static
+//     ^?
+
+
+
+
+
+
+// For Zod
+const zodSign = app.models.zodSign.schema
+type zodSign = z.infer<typeof zodSign>
+//     ^?
+
+
+
+
+// ---cut-after---
+```
+
+`models.<name>.Schema()` will return the original schema definition, then you can follows the library's way of getting the type.-->
 
 ### Multiple Models
 `model` accepts an object with the key as a model name and the value as the model definition. Multiple models are supported by default.

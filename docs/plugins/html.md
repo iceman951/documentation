@@ -7,11 +7,11 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia that adds shortcut support for returning HTML in the Elysia server. Start by installing the plugin with "bun add @elysiajs/html".
+        content: Plugin for Elysia that adds shortcut support for returning HTML in the Elysia server. Start by installing the plugin with "bun add @elysia/html".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia that adds shortcut support for returning HTML in the Elysia server. Start by installing the plugin with "bun add @elysiajs/html".
+        content: Plugin for Elysia that adds shortcut support for returning HTML in the Elysia server. Start by installing the plugin with "bun add @elysia/html".
 ---
 
 # HTML Plugin
@@ -21,7 +21,7 @@ Allows you to use [JSX](#jsx) and HTML with proper headers and support.
 Install with:
 
 ```bash
-bun add @elysiajs/html
+bun add @elysia/html
 ```
 
 Then use it:
@@ -30,7 +30,7 @@ Then use it:
 import React from 'react'
 // ---cut---
 import { Elysia } from 'elysia'
-import { html, Html } from '@elysiajs/html'
+import { html, Html } from '@elysia/html'
 
 new Elysia()
 	.use(html())
@@ -89,7 +89,7 @@ That's it, now you can use JSX as your template engine:
 import React from 'react'
 // ---cut---
 import { Elysia } from 'elysia'
-import { html, Html } from '@elysiajs/html' // [!code ++]
+import { html, Html } from '@elysia/html' // [!code ++]
 
 new Elysia()
 	.use(html()) // [!code ++]
@@ -109,7 +109,7 @@ new Elysia()
 If the error `Cannot find name 'Html'. Did you mean 'html'?` occurs, this import must be added to the JSX template:
 
 ```tsx
-import { Html } from '@elysiajs/html'
+import { Html } from '@elysia/html'
 ```
 
 It is important that it is written in uppercase.
@@ -122,7 +122,7 @@ You can use a dedicated `safe` attribute to sanitize user value to prevent XSS v
 
 ```tsx
 import { Elysia, t } from 'elysia'
-import { html, Html } from '@elysiajs/html'
+import { html, Html } from '@elysia/html'
 
 new Elysia()
 	.use(html())
@@ -145,7 +145,7 @@ new Elysia()
 	.listen(3000)
 ```
 
-However, when are building a large-scale app, it's best to have a type reminder to detect possible XSS vulnerabilities in your codebase.
+However, when building a large-scale app, it's best to have a type reminder to detect possible XSS vulnerabilities in your codebase.
 
 To add a type-safe reminder, please install:
 
@@ -205,6 +205,6 @@ app.get('/', ({ html }) => html('<html></html>'))
 - Type: `(value: string) => boolean`
 - Default: `isHtml` (exported function)
 
-The function is used to detect if a string is a html or not. Default implementation if length is greater than 7, starts with `<` and ends with `>`.
+The function is used to detect if a string is HTML or not. Default implementation if length is greater than 7, starts with `<` and ends with `>`.
 
 Keep in mind there's no real way to validate HTML, so the default implementation is a best guess.

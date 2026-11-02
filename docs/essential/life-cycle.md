@@ -38,13 +38,11 @@ const demo = new Elysia()
 
 # Lifecycle <TutorialBadge href="/tutorial/getting-started/life-cycle" />
 
-Lifecycle events allow you to intercept important events at predefined points, allowing you to customize the behavior of your server as needed.
+Instead of a sequential process, Elysia's request handling is divided into multiple stages called **lifecycle events**.
 
-Elysia's lifecycle can be illustrated as the following.
-![Elysia Life Cycle Graph](/assets/lifecycle-chart.svg)
-> Click on image to enlarge
+It's designed to separate the process into distinct phases based on their responsibility without interfering with each others.
 
-Below are the request lifecycle events available in Elysia:
+Here are the lifecycle events in order:
 
 <Deck>
     <Card title="Request" href="#request">
@@ -60,21 +58,27 @@ Below are the request lifecycle events available in Elysia:
         Custom validation before route handler
     </Card>
     <Card title="After Handle" href="#after-handle">
-        Transform returned value into a new value
+    	Tweak returned value from route handler
     </Card>
     <Card title="Map Response" href="#map-response">
-        Map returned value into a response
+        Map returned value into HTTP response
     </Card>
     <Card title="On Error (Error Handling)" href="#on-error-error-handling">
    		Handle errors thrown in the life-cycle
     </Card>
     <Card title="After Response" href="#after-response">
-        Executed after response sent to the client
+    	Clean up after response is sent
     </Card>
     <Card title="Trace" href="/patterns/trace">
         Audit and capture timespan of each event
     </Card>
 </Deck>
+
+---
+
+Elysia's lifecycle can be illustrated as the following.
+![Elysia Life Cycle Graph](/assets/lifecycle-chart.svg)
+> Click on image to enlarge
 
 ## Why
 
@@ -88,7 +92,7 @@ Instead, what if the framework could detect when a response is HTML and automati
 
 ## Hook
 
-Each function that intercepts the **lifecycle event** as **"hook"**.
+Each function that intercepts the **lifecycle event** is called a **"hook"**.
 
 <small>(as the function **"hooks"** into the lifecycle event)</small>
 
@@ -109,7 +113,7 @@ To use a local hook, you can inline hook into a route handler:
 
 ```typescript
 import { Elysia } from 'elysia'
-import { isHtml } from '@elysiajs/html'
+import { isHtml } from '@elysia/html'
 
 new Elysia()
     .get('/', () => '<h1>Hello World</h1>', {
@@ -137,7 +141,7 @@ To add an interceptor hook, you can use `.on` followed by a lifecycle event in c
 
 ```typescript
 import { Elysia } from 'elysia'
-import { isHtml } from '@elysiajs/html'
+import { isHtml } from '@elysia/html'
 
 new Elysia()
     .get('/none', () => '<h1>Hello World</h1>')
@@ -212,12 +216,12 @@ new Elysia()
 
 In this example, only **1** will be logged because the event is registered after the plugin.
 
-Every events will follows the same rule except is `onRequest`.
-<small>Because onRequest happens on request, it doesn't know which route to applied to so it's a global event</small>
+Every event follows the same rule except `onRequest`.
+<small>Because onRequest happens on request, it doesn't know which route to apply it to, so it's a global event</small>
 
 ## Request
 
-The first lifecycle event to get executed for every new request is received.
+The first lifecycle event to be executed for every new request.
 
 As `onRequest` is designed to provide only the most crucial context to reduce overhead, it is recommended to use in the following scenarios:
 
@@ -246,7 +250,7 @@ If a value is returned from `onRequest`, it will be used as the response and the
 
 ### Pre Context
 
-Context's `onRequest` is typed as `PreContext`, a minimal representation of `Context` with the attribute on the following:
+The `onRequest` context is typed as `PreContext`, a minimal representation of `Context` with the following attributes:
 request: `Request`
 
 - set: `Set`
@@ -259,7 +263,7 @@ Context doesn't provide `derived` value because derive is based on `onTransform`
 
 Parse is an equivalent of **body parser** in Express.
 
-A function to parse body, the return value will be append to `Context.body`, if not, Elysia will continue iterating through additional parser functions assigned by `onParse` until either body is assigned or all parsers have been executed.
+A function to parse the body; the return value will be appended to `Context.body`. If not, Elysia will continue iterating through additional parser functions assigned by `onParse` until either body is assigned or all parsers have been executed.
 
 By default, Elysia will parse the body with content-type of:
 
@@ -286,7 +290,7 @@ The returned value will be assigned to `Context.body`. If not, Elysia will conti
 
 ### Context
 
-`onParse` Context is extends from `Context` with additional properties of the following:
+`onParse` context extends from `Context` with the following additional properties:
 
 - contentType: Content-Type header of the request
 
@@ -311,9 +315,9 @@ new Elysia().post('/', ({ body }) => body, {
 })
 ```
 
-Elysia read the body schema and found that, the type is entirely an object, so it's likely that the body will be JSON. Elysia then picks the JSON body parser function ahead of time and tries to parse the body.
+Elysia reads the body schema and finds that the type is entirely an object, so it's likely that the body will be JSON. Elysia then picks the JSON body parser function ahead of time and tries to parse the body.
 
-Here's a criteria that Elysia uses to pick up type of body parser
+Here are the criteria that Elysia uses to select the body parser type:
 
 - `application/json`: body typed as `t.Object`
 - `multipart/form-data`: body typed as `t.Object`, and is 1 level deep with `t.File`
@@ -324,7 +328,7 @@ This allows Elysia to optimize body parser ahead of time, and reduce overhead in
 
 ### Explicit Parser
 
-However, in some scenario if Elysia fails to pick the correct body parser function, we can explicitly tell Elysia to use a certain function by specifying `type`.
+However, in some scenarios if Elysia fails to pick the correct body parser function, we can explicitly tell Elysia to use a certain function by specifying `type`.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -358,7 +362,7 @@ type ContentType = |
 ```
 
 ### Skip Body Parsing
-When you need to integrate a third-party library with HTTP handler like `trpc`, `orpc`, and it throw `Body is already used`.
+When you need to integrate a third-party library with an HTTP handler like `trpc` or `orpc`, and it throws `Body is already used`.
 
 This is because Web Standard Request can be parsed only once.
 
@@ -379,7 +383,7 @@ new Elysia()
 
 ### Custom Parser
 
-You can provide register a custom parser with `parser`:
+You can register a custom parser with `parser`:
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -399,7 +403,7 @@ Executed just before **Validation** process, designed to mutate context to confo
 
 It's recommended to use transform for the following:
 
-- Mutate existing context to conform with validation.
+- Mutating the existing context to conform with validation.
 - `derive` is based on `onTransform` with support for providing type.
 
 #### Example
@@ -427,7 +431,7 @@ new Elysia()
 
 Append new value to context directly **before validation**. It's stored in the same stack as **transform**.
 
-Unlike **state** and **decorate** that assigned value before the server started. **derive** assigns a property when each request happens. This allows us to extract a piece of information into a property instead.
+Unlike **state** and **decorate**, which assign values before the server starts, **derive** assigns a property when each request happens. This allows us to extract a piece of information into a property.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -445,12 +449,12 @@ new Elysia()
 
 Because **derive** is assigned once a new request starts, **derive** can access Request properties like **headers**, **query**, **body** where **store**, and **decorate** can't.
 
-Unlike **state**, and **decorate**. Properties which assigned by **derive** is unique and not shared with another request.
+Unlike **state** and **decorate**, properties assigned by **derive** are unique and not shared with other requests.
 
 ::: tip
 You might want to use [resolve](#resolve) instead of derive in most cases.
 
-Resolve is similar to derive but execute after validation. This make resolve more secure as we can validate the incoming data before using it to derive new properties.
+Resolve is similar to derive but execute after validation. This makes resolve more secure as we can validate the incoming data before using it to derive new properties.
 :::
 
 ### Queue
@@ -480,7 +484,7 @@ The console should log as the following:
 
 ## Before Handle
 
-Execute after validation and before the main route handler.
+Executed after validation and before the main route handler.
 
 Designed to provide a custom validation to provide a specific requirement before running the main handler.
 
@@ -596,7 +600,7 @@ The console should log as the following:
 3
 ```
 
-Same as **derive**, properties which assigned by **resolve** is unique and not shared with another request.
+Same as **derive**, properties assigned by **resolve** are unique and not shared with other requests.
 
 ### Guard resolve
 
@@ -636,7 +640,7 @@ Below is an example of using the after handle to add HTML content type to respon
 
 ```typescript
 import { Elysia } from 'elysia'
-import { isHtml } from '@elysiajs/html'
+import { isHtml } from '@elysia/html'
 
 new Elysia()
     .get('/', () => '<h1>Hello World</h1>', {
@@ -664,7 +668,7 @@ The above example could be rewritten as the following:
 
 ```typescript
 import { Elysia } from 'elysia'
-import { isHtml } from '@elysiajs/html'
+import { isHtml } from '@elysia/html'
 
 new Elysia()
     .get('/', () => '<h1>Hello World</h1>', {
@@ -679,7 +683,7 @@ new Elysia()
     .listen(3000)
 ```
 
-Unlike **beforeHandle**, after a value is returned from **afterHandle**, the iteration of afterHandle **will **NOT** be skipped.**
+Unlike **beforeHandle**, after a value is returned from **afterHandle**, the iteration of **afterHandle will NOT be skipped**.
 
 ### Context
 
@@ -707,7 +711,7 @@ const encoder = new TextEncoder()
 
 new Elysia()
     .mapResponse(({ responseValue, set }) => {
-        const isJson = typeof response === 'object'
+        const isJson = typeof responseValue === 'object'
 
         const text = isJson
             ? JSON.stringify(responseValue)
@@ -730,15 +734,15 @@ new Elysia()
 
 Like **parse** and **beforeHandle**, after a value is returned, the next iteration of **mapResponse** will be skipped.
 
-Elysia will handle the merging process of **set.headers** from **mapResponse** automatically. We don't need to worry about appending **set.headers** to Response manually.
+Elysia automatically handles merging **set.headers** from **mapResponse**. You don't need to worry about appending **set.headers** to the Response manually.
 
 ## On Error (Error Handling)
 
 Designed for error handling. It will be executed when an error is thrown in any lifecycle.
 
-It's recommended to use on Error in the following situations:
+It's recommended to use **onError** in the following situations:
 
-- providing a custom error message
+- providing custom error messages
 - fail-safe handling, an error handler, or retrying a request
 - logging and analytics
 
@@ -763,7 +767,7 @@ new Elysia()
 With `onError` we can catch and transform the error into a custom error message.
 
 ::: tip
-It's important that `onError` must be called before the handler we want to apply it to.
+It's important that `onError` must be registered before the handler you want to apply it to.
 :::
 
 ### Custom 404 message
@@ -785,7 +789,7 @@ new Elysia()
 
 ### Context
 
-`onError` Context is extends from `Context` with additional properties of the following:
+`onError` context extends from `Context` with the following additional properties:
 
 - **error**: A value that was thrown
 - **code**: *Error Code*
@@ -811,7 +815,7 @@ If no error response is returned, the error will be returned using `error.name`.
 
 ### Local Error
 
-Same as others life-cycle, we provide an error into an [scope](/essential/plugin.html#scope) using guard:
+Same as other lifecycle events, we provide an error into a [scope](/essential/plugin.html#scope) using guard:
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -861,7 +865,7 @@ Response 0.0002
 
 ### Response
 
-Similar to [Map Response](#map-resonse), `afterResponse` also accept a `responseValue` value.
+Similar to [Map Response](#map-resonse), `afterResponse` also accepts a `responseValue` value.
 
 ```typescript
 import { Elysia } from 'elysia'
@@ -874,9 +878,9 @@ new Elysia()
 	.listen(3000)
 ```
 
-`response` from `onAfterResponse`, is not a Web-Standard's `Response` but is a value that is returned from the handler.
+`response` from `onAfterResponse` is not a Web Standard `Response` but is a value that is returned from the handler.
 
-To get a headers, and status returned from the handler, we can access `set` from the context.
+To get headers and status returned from the handler, we can access `set` from the context.
 
 ```typescript
 import { Elysia } from 'elysia'

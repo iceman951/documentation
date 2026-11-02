@@ -46,7 +46,7 @@ const expand = useExpandWidth(isInView)
                 <li>
                     <motion.h6 v-bind="flyIn(0.3)">
                         <span
-                            class="!text-xl !font-semibold !text-transparent !ml-0 text-gradient from-violet-500 to-sky-500"
+                            class="text-lg! sm:text-xl! font-semibold! text-transparent! ml-0! text-gradient from-violet-500 to-sky-500"
                         >
                             Elysia
                         </span>
@@ -54,9 +54,9 @@ const expand = useExpandWidth(isInView)
                     </motion.h6>
                     <motion.div
                         v-bind="expand(72, 0.4)"
-                        class="bg-gradient-to-r from-violet-500 to-fuchsia-400 !text-white"
+                        class="text-xs sm:text-sm bg-linear-to-r from-violet-500 to-fuchsia-400 text-white!"
                     >
-                        <span>2,454,631 reqs/s</span>
+                        <span>2,454,631 <span id="benchmark-req-sec">reqs/s</span></span>
                     </motion.div>
                 </li>
                 <li>
@@ -95,7 +95,7 @@ const expand = useExpandWidth(isInView)
                     <motion.p v-bind="flyIn(1)">105,064</motion.p>
                 </li>
             </ol>
-            <motion.p class="text-sm mt-3 text-gray-400" v-bind="flyIn(1.1)">
+            <motion.p class="text-sm mt-3 text-mauve-400" v-bind="flyIn(1.1)">
                 Measured in requests/second. Result from
                 <a
                     href="https://www.techempower.com/benchmarks/#hw=ph&test=plaintext&section=data-r22"
@@ -128,7 +128,7 @@ const expand = useExpandWidth(isInView)
         background-image: radial-gradient(
             closest-side at center,
             transparent 0%,
-            var(--color-gray-900) 100%
+            var(--color-mauve-900) 100%
         );
     }
 }
@@ -147,7 +147,7 @@ const expand = useExpandWidth(isInView)
 }
 
 .title {
-    @apply flex flex-col justify-start items-start gap-0.5 text-gray-400;
+    @apply flex flex-col justify-start items-start gap-0.5 text-mauve-400;
 
     & > h3 {
         @apply text-7xl sm:text-8xl font-bold;
@@ -169,20 +169,26 @@ const expand = useExpandWidth(isInView)
         @apply flex justify-start items-center gap-4 w-full h-6;
 
         & > h6 {
-            @apply w-36 min-w-36 font-mono text-lg font-medium text-gray-500 dark:text-gray-400;
+            @apply w-32 min-w-32 font-mono text-lg font-medium text-mauve-500 dark:text-mauve-400;
 
             & > span {
-                @apply text-sm text-gray-400 font-normal;
+                @apply text-xs sm:text-sm text-mauve-400 font-normal;
             }
         }
 
         & > div {
-            @apply flex justify-end items-center w-full h-6 font-bold font-mono text-gray-500 dark:text-gray-400 text-sm pr-3 bg-gray-200 dark:bg-gray-600 rounded-2xl;
+            @apply flex justify-end items-center w-full h-6 font-bold font-mono text-mauve-500 dark:text-mauve-400 text-sm pr-3 bg-mauve-200 dark:bg-mauve-600 rounded-2xl;
         }
 
         & > p {
-            @apply font-medium font-mono text-gray-400 text-sm -translate-x-2;
+            @apply font-medium font-mono text-mauve-400 text-xs sm:text-sm -translate-x-2;
         }
     }
+}
+
+@media (max-width: 320px) {
+	#benchmark-req-sec {
+		@apply hidden;
+	}
 }
 </style>

@@ -8,15 +8,15 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysiajs/swagger".
+        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysia/swagger".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysiajs/swagger".
+        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysia/swagger".
 ---
 
 ::: warning
-Swagger plugin is deprecated and is no longer be maintained. Please use [OpenAPI plugin](/plugins/openapi) instead.
+Swagger plugin is deprecated and is no longer maintained. Please use [OpenAPI plugin](/plugins/openapi) instead.
 :::
 
 # Swagger Plugin
@@ -26,14 +26,14 @@ This plugin generates a Swagger endpoint for an Elysia server
 Install with:
 
 ```bash
-bun add @elysiajs/swagger
+bun add @elysia/swagger
 ```
 
 Then use it:
 
 ```typescript
 import { Elysia } from 'elysia'
-import { swagger } from '@elysiajs/swagger'
+import { swagger } from '@elysia/swagger'
 
 new Elysia()
     .use(swagger())
@@ -52,7 +52,7 @@ Below is a config which is accepted by the plugin
 
 @default `scalar`
 
-UI Provider for documentation. Default to Scalar.
+UI Provider for documentation. Defaults to Scalar.
 
 ### scalar
 
@@ -98,7 +98,7 @@ You can change the swagger endpoint by setting [path](#path) in the plugin confi
 
 ```typescript
 import { Elysia } from 'elysia'
-import { swagger } from '@elysiajs/swagger'
+import { swagger } from '@elysia/swagger'
 
 new Elysia()
     .use(
@@ -113,7 +113,7 @@ new Elysia()
 
 ```typescript
 import { Elysia } from 'elysia'
-import { swagger } from '@elysiajs/swagger'
+import { swagger } from '@elysia/swagger'
 
 new Elysia()
     .use(
@@ -131,9 +131,9 @@ new Elysia()
 
 ## Using Tags
 
-Elysia can separate the endpoints into groups by using the Swaggers tag system
+Elysia can separate the endpoints into groups by using the Swagger tag system
 
-Firstly define the available tags in the swagger config object
+First, define the available tags in the Swagger config object
 
 ```typescript
 app.use(
@@ -148,7 +148,7 @@ app.use(
 )
 ```
 
-Then use the details property of the endpoint configuration section to assign that endpoint to the group
+Then use the detail property of the endpoint configuration section to assign that endpoint to the group
 
 ```typescript
 app.get('/', () => 'Hello Elysia', {
@@ -177,7 +177,7 @@ app.group('/auth', (app) =>
 )
 ```
 
-Which will produce a swagger page like the following
+This will produce a Swagger page as follows
 <img width="1446" alt="image" src="/assets/swagger-demo.webp">
 
 ## Security Configuration

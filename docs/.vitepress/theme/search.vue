@@ -39,7 +39,14 @@ import Ray from '../../components/fern/ray.vue'
 import { LRUCache } from './search/lru-cache'
 import { useData } from './search/use-data'
 import { createSearchTranslate } from './search/translation'
-import { ArrowRight, TextAlignStart, Delete, File, Hash, Sparkles } from 'lucide-vue-next'
+import {
+    ArrowRight,
+    TextAlignStart,
+    Delete,
+    File,
+    Hash,
+    Sparkles
+} from 'lucide-vue-next'
 
 export interface FooterTranslations {
     selectText?: string
@@ -352,8 +359,15 @@ onKeyStroke('Enter', (e) => {
 
     if (index === -1) {
         // @ts-ignore
-        window.toggleAI({ value: filterText.value })
+        window.toggleAI({
+            value: filterText.value,
+            submit: true,
+            clearHistory: true
+        })
+
+        filterText.value = ''
         showSearch.value = false
+
         return
     }
 
@@ -471,7 +485,7 @@ function toggleAI() {
             <AnimatePresence>
                 <motion.div
                     v-if="showSearch"
-                    class="backdrop"
+                    class="absolute top-0 left-0 block w-full h-screen bg-black/7.5"
                     @click="showSearch = false"
                     :initial="{
                         opacity: 0
@@ -581,7 +595,10 @@ function toggleAI() {
                                     (showDetailedList = !showDetailedList)
                                 "
                             >
-                            	<TextAlignStart :size="19" stroke-width="1.25" />
+                                <TextAlignStart
+                                    :size="19"
+                                    stroke-width="1.25"
+                                />
                             </button>
 
                             <button
@@ -694,7 +711,7 @@ function toggleAI() {
 
                         <AnimatePresence>
                             <motion.div
-                                class="flex flex-col justify-center items-center h-47.5 gap-2 font-medium text-sm text-gray-500 dark:text-gray-300 m-auto md:mt-10 md:mb-6 opacity-90"
+                                class="flex flex-col justify-center items-center h-47.5 gap-2 font-medium text-sm text-mauve-500 dark:text-mauve-300 m-auto md:mt-10 md:mb-6 opacity-90"
                                 v-if="
                                     !filterText ||
                                     (filterText && !results.length)
@@ -827,18 +844,18 @@ function toggleAI() {
                                                 class="excerpt"
                                                 inert
                                                 :initial="{
-													height: 0
-												}"
-												:animate="{
-													height: '84px'
-												}"
-												:exit="{
-													height: 0
-												}"
-												:transition="{
-													duration: 0.4,
-													ease: [0.16, 1, 0.3, 1]
-												}"
+                                                    height: 0
+                                                }"
+                                                :animate="{
+                                                    height: '84px'
+                                                }"
+                                                :exit="{
+                                                    height: 0
+                                                }"
+                                                :transition="{
+                                                    duration: 0.4,
+                                                    ease: [0.16, 1, 0.3, 1]
+                                                }"
                                             >
                                                 <div
                                                     class="vp-doc"

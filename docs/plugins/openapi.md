@@ -7,11 +7,11 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysiajs/swagger".
+        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysia/swagger".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysiajs/swagger".
+        content: Plugin for Elysia that adds support for generating Swagger API documentation for Elysia Server. Start by installing the plugin with "bun add @elysia/swagger".
 ---
 
 <script setup lang="ts">
@@ -25,14 +25,14 @@ Plugin for [elysia](https://github.com/elysiajs/elysia) to auto-generate API doc
 Install with:
 
 ```bash
-bun add @elysiajs/openapi
+bun add @elysia/openapi
 ```
 
 Then use it:
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
-import { openapi } from '@elysiajs/openapi'
+import { openapi } from '@elysia/openapi'
 
 new Elysia()
     .use(openapi())
@@ -46,7 +46,7 @@ Accessing `/openapi` would show you a Scalar UI with the generated endpoint docu
 ::: tip
 This page is the plugin configuration reference.
 
-If you're looking for a common patterns or an advanced usage of OpenAPI, check out [Patterns: OpenAPI](/patterns/openapi)
+If you're looking for common patterns or advanced usage of OpenAPI, check out [Patterns: OpenAPI](/patterns/openapi)
 :::
 
 ## Detail
@@ -63,7 +63,7 @@ You can hide the route from the Swagger page by setting `detail.hide` to `true`
 
 ```typescript
 import { Elysia, t } from 'elysia'
-import { openapi } from '@elysiajs/openapi'
+import { openapi } from '@elysia/openapi'
 
 new Elysia().use(openapi()).post('/sign-in', ({ body }) => body, {
     body: t.Object(
@@ -96,7 +96,7 @@ A short summary of what the operation does.
 
 ## Config
 
-Below is a config which is accepted by the plugin
+Below is the config that is accepted by the plugin
 
 ## enabled
 
@@ -132,11 +132,11 @@ Exclude static file routes from documentation
 List of tags to exclude from documentation
 
 ## mapJsonSchema
-A custom mapping function from Standard schema to OpenAPI schema
+A custom mapping function from standard schema to OpenAPI schema
 
 ### Example
 ```typescript
-import { openapi } from '@elysiajs/openapi'
+import { openapi } from '@elysia/openapi'
 import { toJsonSchema } from '@valibot/to-json-schema'
 
 openapi({
@@ -156,7 +156,7 @@ The endpoint to expose OpenAPI documentation frontend
 
 @default 'scalar'
 
-OpenAPI documentation frontend between:
+OpenAPI documentation frontend provider between:
 
 - [Scalar](https://github.com/scalar/scalar)
 - [SwaggerUI](https://github.com/swagger-api/swagger-ui)
@@ -170,6 +170,21 @@ Additional OpenAPI reference for each endpoint
 
 Scalar configuration, refers to [Scalar config](https://github.com/scalar/scalar/blob/main/documentation/configuration.md)
 
+### Self-hosted Scalar bundle
+
+Self-host the Scalar bundle and disable CDN Fonts.
+
+Note: `cdn` is an Elysia OpenAPI plugin option (not part of Scalar’s own config); it overrides the URI to the Scalar bundle.
+
+```typescript
+    openapi({ 
+      scalar: {
+        cdn: "/public/scalar-standalone.min.js", // plugin override for Scalar bundle URI (self-hosted)
+        withDefaultFonts: false, // disable Scalar’s default font CDN
+      },
+    })
+```
+
 ## specPath
 
 @default '/${path}/json'
@@ -180,4 +195,4 @@ The endpoint to expose OpenAPI specification in JSON format
 
 Swagger config, refers to [Swagger config](https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/)
 
-Below you can find the common patterns to use the plugin.
+Below you can find common patterns to use the plugin.

@@ -20,7 +20,7 @@ Elysia comes with a configurable behavior, allowing us to customize various aspe
 
 We can define a configuration by using a constructor.
 
-```ts twoslash
+```ts
 import { Elysia, t } from 'elysia'
 
 new Elysia({
@@ -35,7 +35,7 @@ new Elysia({
 
 Runtime adapter for using Elysia in different environments.
 
-Default to appropriate adapter based on the environment.
+Defaults to appropriate adapter based on the environment.
 
 ```ts
 import { Elysia, t } from 'elysia'
@@ -52,7 +52,7 @@ new Elysia({
 
 Whether Elysia should include unsafe validation details in the error response on production.
 
-```ts twoslash
+```ts
 import { Elysia, t } from 'elysia'
 
 new Elysia({
@@ -60,11 +60,11 @@ new Elysia({
 })
 ```
 
-By default, Elysia will omitted all validation detail on production.
+By default, Elysia will omit all validation detail on production.
 
 This is done to prevent leaking sensitive information about the validation schema, such as field names and expected types, which could be exploited by an attacker.
 
-Ideally, this should only be enabled on a public APIs as it may leak sensitive information about the server implementation.
+Ideally, this should only be enabled on public APIs as it may leak sensitive information about the server implementation.
 
 #### Options - @default `false`
 - `true` - Include unsafe validation details in the error response on production
@@ -78,7 +78,7 @@ Ahead of Time compilation.
 
 Elysia has a built-in JIT _"compiler"_ that can [optimize performance](/blog/elysia-04.html#ahead-of-time-complie).
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia({
@@ -99,7 +99,7 @@ Define an OpenAPI schema for all routes of an instance.
 
 This schema will be used to generate OpenAPI documentation for all routes of an instance.
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia({
@@ -112,9 +112,9 @@ new Elysia({
 
 ## encodeSchema
 
-Handle custom `t.Transform` schema with custom `Encode` before returning the response to client.
+Handle custom `t.Transform` schemas with custom `Encode` before returning the response to client.
 
-This allows us to create custom encode function for your data before sending response to the client.
+This allows us to create custom encode functions for your data before sending response to the client.
 
 ```ts
 import { Elysia, t } from 'elysia'
@@ -129,9 +129,9 @@ new Elysia({ encodeSchema: true })
 
 ## name
 
-Define a name of an instance which is used for debugging and [Plugin Deduplication](/essential/plugin.html#plugin-deduplication)
+Define the name of an instance which is used for debugging and [Plugin Deduplication](/essential/plugin.html#plugin-deduplication)
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia({
@@ -142,9 +142,9 @@ new Elysia({
 ## nativeStaticResponse
 ###### Since 1.1.11
 
-Use an optimized function for handling inline value for each respective runtime.
+Use optimized functions for handling inline values for each respective runtime.
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia({
@@ -176,9 +176,9 @@ Bun.serve({
 
 ###### Since 1.1.0
 
-Whether Elysia should coerce field into a specified schema.
+Whether Elysia should coerce fields into a specified schema.
 
-```ts twoslash
+```ts
 import { Elysia, t } from 'elysia'
 
 new Elysia({
@@ -202,7 +202,7 @@ Options - @default `true`
 
 Whether Elysia should [precompile all routes](/blog/elysia-10.html#improved-startup-time) ahead of time before starting the server.
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia({
@@ -222,7 +222,7 @@ It's recommended to leave it as `false`.
 
 Define a prefix for all routes of an instance
 
-```ts twoslash
+```ts
 import { Elysia, t } from 'elysia'
 
 new Elysia({
@@ -234,7 +234,7 @@ When prefix is defined, all routes will be prefixed with the given value.
 
 #### Example
 
-```ts twoslash
+```ts
 import { Elysia, t } from 'elysia'
 
 new Elysia({ prefix: '/v1' }).get('/name', 'elysia') // Path is /v1/name
@@ -242,9 +242,9 @@ new Elysia({ prefix: '/v1' }).get('/name', 'elysia') // Path is /v1/name
 
 ## sanitize
 
-A function or an array of function that calls and intercepts on every `t.String` while validation.
+A function or an array of functions that calls and intercepts on every `t.String` while validation.
 
-Allowing us to read and transform a string into a new value.
+Allowing us to read and transform strings into new values.
 
 ```ts
 import { Elysia, t } from 'elysia'
@@ -256,9 +256,9 @@ new Elysia({
 
 ## seed
 
-Define a value which will be used to generate checksum of an instance, used for [Plugin Deduplication](/essential/plugin.html#plugin-deduplication)
+Define a value that will be used to generate checksum of an instance, used for [Plugin Deduplication](/essential/plugin.html#plugin-deduplication)
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia({
@@ -272,11 +272,11 @@ The value could be any type not limited to string, number, or object.
 
 ## strictPath
 
-Whether should Elysia handle path strictly.
+Whether Elysia should handle paths strictly.
 
 According to [RFC 3986](https://tools.ietf.org/html/rfc3986#section-3.3), a path should be strictly equal to the path defined in the route.
 
-```ts twoslash
+```ts
 import { Elysia, t } from 'elysia'
 
 new Elysia({ strictPath: true })
@@ -289,7 +289,7 @@ new Elysia({ strictPath: true })
 
 #### Example
 
-```ts twoslash
+```ts
 import { Elysia, t } from 'elysia'
 
 // Path can be either /name or /name/
@@ -373,13 +373,13 @@ import { Elysia } from 'elysia'
 
 new Elysia({
 	serve: {
-		// Increase idle timeout to 30 seconds
-		idleTimeout: 30
+		// Increase idle timeout to 60 seconds
+		idleTimeout: 60
 	}
 })
 ```
 
-By default the idle timeout is 10 seconds (on Bun).
+By default the idle timeout is 30 seconds.
 
 ---
 
@@ -401,9 +401,9 @@ Uniquely identify a server instance with an ID
 This string will be used to hot reload the server without interrupting pending requests or websockets. If not provided, a value will be generated. To disable hot reloading, set this value to `null`.
 
 ### serve.idleTimeout
-@default `10` (10 seconds)
+@default `30` (30 seconds)
 
-By default, Bun set idle timeout to 10 seconds, which means that if a request is not completed within 10 seconds, it will be aborted.
+By default, Elysia sets idle timeout to 30 seconds, which means that if a request is not completed within 30 seconds, it will be aborted.
 
 ### serve.maxRequestBodySize
 @default `1024 * 1024 * 128` (128MB)
@@ -427,7 +427,7 @@ If the `SO_REUSEPORT` flag should be set
 
 This allows multiple processes to bind to the same port, which is useful for load balancing
 
-This configuration is override and turns on by default by Elysia
+This configuration is overridden and turns on by default by Elysia
 
 ### serve.unix
 If set, the HTTP server will listen on a unix socket instead of a port.
@@ -509,9 +509,9 @@ Explicitly set a server name
 
 ## tags
 
-Define an tags for OpenAPI schema for all routes of an instance similar to [detail](#detail)
+Define tags for OpenAPI schema for all routes of an instance similar to [detail](#detail)
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
 
 new Elysia({

@@ -21,6 +21,7 @@ import TutorialBadge from '../components/arona/badge.vue'
 import Card from '../components/nearl/card.vue'
 import Deck from '../components/nearl/card-deck.vue'
 import Playground from '../components/nearl/playground.vue'
+import DocLink from '../components/xiao/doc-link/doc-link.vue'
 
 const demo = new Elysia()
 	.onError(({ code }) => {
@@ -69,7 +70,7 @@ const demo3 = new Elysia()
 
 # Error Handling <TutorialBadge href="/tutorial/patterns/error-handling" />
 
-This page provide a more advance guide for effectively handling errors with Elysia.
+This page provides a more advanced guide for effectively handling errors with Elysia.
 
 If you haven't read **"Life Cycle (onError)"** yet, we recommend you to read it first.
 
@@ -100,7 +101,7 @@ new Elysia().get('/:id', ({ params: { id } }) => id, {
 })
 ```
 
-If the validation fails on the `id` field, the response will be return as `id must be a number`.
+If the validation fails on the `id` field, the response will be returned as `id must be a number`.
 
 <Playground
 	:elysia="demo2"
@@ -108,7 +109,7 @@ If the validation fails on the `id` field, the response will be return as `id mu
 
 ### Validation Detail <TutorialBadge href="/tutorial/patterns/validation-error" />
 
-Returning as value from `schema.error` will return the validation as-is, but sometimes you may also want to return the validation details, such as the field name and the expected type
+Returning a value from `schema.error` will return the validation as-is, but sometimes you may also want to return the validation details, such as the field name and the expected type
 
 You can do this by using the `validationDetail` option.
 
@@ -130,7 +131,7 @@ This will include all of the validation details in the response, such as the fie
 	:elysia="demo3"
 />
 
-But if you're planned to use `validationDetail` in every field, adding it manually can be annoying.
+But if you plan to use `validationDetail` in every field, adding it manually can be annoying.
 
 You can automatically add validation detail by handling it in `onError` hook.
 
@@ -153,7 +154,7 @@ This will apply every validation error with a custom message with custom validat
 
 ## Validation Detail on production
 
-By default, Elysia will omitted all validation detail if `NODE_ENV` is `production`.
+By default, Elysia will omit all validation detail if `NODE_ENV` is `production`.
 
 This is done to prevent leaking sensitive information about the validation schema, such as field names and expected types, which could be exploited by an attacker.
 
@@ -175,15 +176,15 @@ This can be overridden by setting `Elysia.allowUnsafeValidationDetails` to `true
 
 ## Custom Error
 
-Elysia supports custom error both in the type-level and implementation level.
+Elysia supports custom errors both in the type-level and implementation level.
 
-By default, Elysia have a set of built-in error types like `VALIDATION`, `NOT_FOUND` which will narrow down the type automatically.
+By default, Elysia has a set of built-in error types like `VALIDATION`, `NOT_FOUND` which will narrow down the type automatically.
 
 If Elysia doesn't know the error, the error code will be `UNKNOWN` with default status of `500`
 
 But you can also add a custom error with type safety with `Elysia.error` which will help narrow down the error type for full type safety with auto-complete, and custom status code as follows:
 
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
 
 class MyError extends Error {
@@ -280,14 +281,14 @@ class MyError extends Error {
 
 ## To Throw or Return
 
-Most of an error handling in Elysia can be done by throwing an error and will be handle in `onError`.
+Most error handling in Elysia can be done by throwing an error and will be handled in `onError`.
 
 But for `status` it can be a little bit confusing, since it can be used both as a return value or throw an error.
 
 It could either be **return** or **throw** based on your specific needs.
 
-- If an `status` is **throw**, it will be caught by `onError` middleware.
-- If an `status` is **return**, it will be **NOT** caught by `onError` middleware.
+- If a `status` is **throw**, it will be caught by `onError` middleware.
+- If a `status` is **return**, it will be **NOT** caught by `onError` middleware.
 
 See the following code:
 
@@ -307,6 +308,8 @@ new Elysia()
         return status(418)
     })
 ```
+
+Here we use `status(418)` which is the "I'm a teapot" status code. You can also use the string name directly: `status("I'm a teapot")`. See <DocLink href="/tutorial/getting-started/status-and-headers#status">Status</DocLink> for more on using status codes.
 
 <Playground
     :elysia="demo"

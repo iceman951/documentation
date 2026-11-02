@@ -7,11 +7,11 @@ head:
 
     - - meta
       - name: 'description'
-        content: Plugin for Elysia for performance audit via Server Timing API. Start by installing the plugin with "bun add @elysiajs/server-timing".
+        content: Plugin for Elysia for performance audit via Server Timing API. Start by installing the plugin with "bun add @elysia/server-timing".
 
     - - meta
       - name: 'og:description'
-        content: Plugin for Elysia for performance audit via Server Timing API. Start by installing the plugin with "bun add @elysiajs/server-timing".
+        content: Plugin for Elysia for performance audit via Server Timing API. Start by installing the plugin with "bun add @elysia/server-timing".
 ---
 
 # Server Timing Plugin
@@ -19,13 +19,13 @@ This plugin adds support for auditing performance bottlenecks with Server Timing
 
 Install with:
 ```bash
-bun add @elysiajs/server-timing
+bun add @elysia/server-timing
 ```
 
 Then use it:
-```typescript twoslash
+```typescript
 import { Elysia } from 'elysia'
-import { serverTiming } from '@elysiajs/server-timing'
+import { serverTiming } from '@elysia/server-timing'
 
 new Elysia()
     .use(serverTiming())
@@ -33,7 +33,7 @@ new Elysia()
     .listen(3000)
 ```
 
-Server Timing then will append header 'Server-Timing' with log duration, function name, and detail for each life-cycle function.
+Server Timing will then append the 'Server-Timing' header with log duration, function name, and detail for each life-cycle function.
 
 To inspect, open browser developer tools > Network > [Request made through Elysia server] > Timing.
 
@@ -52,7 +52,7 @@ Determine whether or not Server Timing should be enabled
 ### allow
 @default `undefined`
 
-A condition whether server timing should be log
+A condition for whether server timing should be logged
 
 ### trace
 @default `undefined`
@@ -76,9 +76,9 @@ Below you can find the common patterns to use the plugin.
 ## Allow Condition
 You may disable Server Timing on specific routes via `allow` property
 
-```ts twoslash
+```ts
 import { Elysia } from 'elysia'
-import { serverTiming } from '@elysiajs/server-timing'
+import { serverTiming } from '@elysia/server-timing'
 
 new Elysia()
     .use(

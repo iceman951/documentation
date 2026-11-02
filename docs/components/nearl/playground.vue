@@ -1,6 +1,6 @@
 <template>
 	<article
-		class="mockup-browser dark:bg-slate-800 border dark:border-slate-700 playground"
+		class="mockup-browser dark:bg-mauve-800 border dark:border-mauve-700 playground"
 	>
 		<div class="mockup-browser-toolbar">
 			<div class="input">
@@ -20,7 +20,7 @@
 				</select>
 			</div>
 			<p
-				class="!my-0 font-semibold pl-2 min-w-[5.5ch] text-right whitespace-nowrap"
+				class="my-0! font-semibold pl-2 min-w-[5.5ch] text-right whitespace-nowrap"
 				:class="
 					current.method === 'GET'
 						? 'text-green-600'
@@ -116,10 +116,10 @@ watch([current], compute)
 		}
 
 		& > .input {
-			@apply flex justify-start items-center gap-1 w-full max-w-sm px-3 py-0.75 rounded-xl bg-neutral-100 dark:bg-slate-700 overflow-hidden;
+			@apply flex justify-start items-center gap-1 w-full max-w-sm px-3 py-0.75 rounded-xl bg-neutral-100 dark:bg-mauve-700 overflow-hidden;
 
 			& > .select {
-				@apply text-blue-500 font-bold px-1 py-0.25 bg-blue-500/10 hover:bg-blue-500/20 dark:bg-blue-500/25 dark:hover:bg-blue-500/40 border border-solid border-blue-500/50 dark:border-blue-500/75 rounded-lg cursor-pointer transition-colors
+				@apply clicky text-pink-400 dark:text-pink-300 font-bold px-1 py-0.25 bg-pink-400/10 hover:bg-pink-400/20 dark:bg-pink-300/25 dark:hover:bg-pink-300/40 border border-solid border-pink-400/50 dark:border-pink-300/50 rounded-lg cursor-pointer transition-colors
 			}
 		}
 	}

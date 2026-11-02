@@ -19,13 +19,15 @@ head:
     import Deck from './components/nearl/card-deck.vue'
 
 	import TutorialLink from './components/xiao/tutorial-link.vue'
+	import AronaBanner from './components/arona/arona-banner.vue'
 </script>
 
 # Table of Content
 
-There's no correct way to learn Elysia, but we **highly recommended** you checkout the an **Interactive Tutorial** first to get familiar with Elysia:
+There's no correct way to learn Elysia, but we **highly recommend** you check out the **Interactive Tutorial** first to get familiar with Elysia:
 
 <TutorialLink />
+<AronaBanner />
 
 <!--### Prerequisite Knowledge
 Although Elysia's documentation is designed to be beginner-friendly, we need to establish a baseline so that the docs can stay focused on Elysia's functionality. We will provide links to relevant documentation whenever we introduce a new concept.
@@ -33,7 +35,7 @@ Although Elysia's documentation is designed to be beginner-friendly, we need to 
 To get the most out of our documentation, it's recommended that you have a basic understanding of Node.js and basic HTTP.-->
 
 ## First up
-We highly recommended you to check out these 2 pages first before getting started with Elysia:
+We highly recommend you check out these 2 pages first before getting started with Elysia:
 
 <Deck>
 	<Card title="Key Concept" href="/key-concept">
@@ -44,9 +46,13 @@ We highly recommended you to check out these 2 pages first before getting starte
     </Card>
 </Deck>
 
-### llms.txt
+### AI Skills / For LLMS
 
-Alternatively, you can download <a href="/llms.txt" download>llms.txt</a> or <a href="/llms-full.txt" download>llms-full.txt</a> and feed it to your favorite LLMs like ChatGPT, Claude or Gemini to get a more interactive experience.
+Elysia offers `llms.txt` and `skills` for AI agent like **Claude Code** and **OpenCode** to help your agent understand Elysia better.
+
+```bash
+bunx skills add elysiajs/skills
+```
 
 <Deck>
     <Card title="llms.txt" href="/llms.txt" download>
@@ -57,44 +63,28 @@ Alternatively, you can download <a href="/llms.txt" download>llms.txt</a> or <a 
     </Card>
 </Deck>
 
-### If you are stuck
-
-Feel free to ask our community on GitHub Discussions, Discord, and Twitter.
-
-<Deck>
-    <Card title="Discord" href="https://discord.gg/eaFJ2KDJck">
-        Official ElysiaJS discord community server
-    </Card>
-    <Card title="Twitter" href="https://twitter.com/elysiajs">
-        Track updates and status of Elysia
-    </Card>
-    <Card title="GitHub" href="https://github.com/elysiajs">
-        Source code and development
-    </Card>
-</Deck>
-
-## From other Framework?
+## From Other Frameworks?
 
 If you have used other popular frameworks like Express, Fastify, or Hono, you will find Elysia right at home with just a few differences.
 
 <Deck>
-	<Card title="From Express" href="/migrate/from-express">
-		Comparison between tRPC and Elysia
-	</Card>
+    <Card title="From Express" href="/migrate/from-express">
+        Comparison between Express and Elysia
+    </Card>
     <Card title="From Fastify" href="/migrate/from-fastify">
-  		Comparison between Fastify and Elysia
+        Comparison between Fastify and Elysia
     </Card>
     <Card title="From Hono" href="/migrate/from-hono">
-  		Comparison between tRPC and Elysia
+        Comparison between Hono and Elysia
     </Card>
     <Card title="From tRPC" href="/migrate/from-trpc">
-  		Comparison between tRPC and Elysia
+        Comparison between tRPC and Elysia
     </Card>
 </Deck>
 
 ## Essential Chapter
 
-Here are the foundation of Elysia, we highly recommended you to go through these pages before jumping to other topics:
+Here are the foundations of Elysia. We highly recommend you go through these pages before jumping to other topics:
 
 <Deck>
 	<Card title="Route" href="/essential/route">
@@ -116,19 +106,19 @@ Here are the foundation of Elysia, we highly recommended you to go through these
 
 ## More Patterns
 
-If you feels like exploring more Elysia feature, check out:
+If you feel like exploring more Elysia features, check out:
 
 <Deck>
     <Card title="Handler" href="/eden/overview">
-    	More pattern on how to send a file, Server Sent Event, etc.
+    	More patterns on how to send a file, use Server Sent Events, etc.
     </Card>
     <Card title="Web Socket" href="/patterns/websocket">
-   		See how to create Real Time application with Elysia
+   		See how to create Real Time applications with Elysia
     </Card>
     <Card title="Eden" href="/eden/overview">
-    	Learn more about Eden, and how to use it effectively
+    	Learn more about Eden and how to use it effectively
     </Card>
-    <Card title="Open Telemetry" href="/eden/opentelemetry">
+    <Card title="Open Telemetry" href="/patterns/opentelemetry">
    		Learn how to monitor your application with Open Telemetry
     </Card>
     <Card title="Deploy to Production" href="/patterns/deploy">
@@ -136,9 +126,9 @@ If you feels like exploring more Elysia feature, check out:
     </Card>
 </Deck>
 
-## Integration with Meta Framework
+## Integration with Meta Frameworks
 
-We can also use Elysia with Meta Framework like Nextjs, Nuxt, Astro, etc.
+You can also use Elysia with Meta Frameworks like Next.js, Nuxt, Astro, etc.
 
 <Deck>
 	<Card title="Astro" href="/integrations/astro">
@@ -158,9 +148,9 @@ We can also use Elysia with Meta Framework like Nextjs, Nuxt, Astro, etc.
 	</Card>
 </Deck>
 
-## Integration with your favorite tool
+## Integration with Your Favorite Tools
 
-We have some integration with popular tools:
+We have some integrations with popular tools:
 
 <Deck>
 	<Card title="AI SDK" href="/integrations/ai-sdk">
@@ -170,15 +160,32 @@ We have some integration with popular tools:
    		Learn how to use Better Auth with Elysia
     </Card>
     <Card title="Drizzle" href="/integrations/drizzle">
-  		Elysia provides a type safe utility with Drizzle
+  		Elysia provides type-safe utilities with Drizzle
     </Card>
     <Card title="Prisma" href="/integrations/prisma">
   		Learn how to use Prisma with Elysia
     </Card>
     <Card title="React Email" href="/integrations/react-email">
-  		We can use JSX to create email template
+  		Use JSX to create email templates
     </Card>
 </Deck>
+
+## Community & Support
+
+If you are stuck, feel free to ask our community on GitHub Discussions, Discord, and Twitter.
+
+<Deck>
+    <Card title="Discord" href="https://discord.gg/eaFJ2KDJck">
+        Official ElysiaJS Discord community server
+    </Card>
+    <Card title="Twitter" href="https://twitter.com/elysiajs">
+        Track updates and status of Elysia
+    </Card>
+    <Card title="GitHub" href="https://github.com/elysiajs">
+        Source code and development
+    </Card>
+</Deck>
+
 
 ---
 

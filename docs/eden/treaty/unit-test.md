@@ -15,15 +15,15 @@ head:
 ---
 
 # Unit Test
-According to [Eden Treaty config](/eden/treaty/config.html#urlorinstance) and [Unit Test](/patterns/unit-test), we may pass an Elysia instance to Eden Treaty directly to interact with Elysia server directly without sending a network request.
+According to [Eden Treaty config](/eden/treaty/config.html#urlorinstance) and [Unit Test](/patterns/unit-test), we may pass an Elysia instance to Eden Treaty directly to interact with the Elysia server directly without sending a network request.
 
-We may use this pattern to create a unit test with end-to-end type safety and type-level test all at once.
+We may use this pattern to create a unit test with end-to-end type safety and type-level tests all at once.
 
 ```typescript twoslash
 // test/index.test.ts
 import { describe, expect, it } from 'bun:test'
 import { Elysia } from 'elysia'
-import { treaty } from '@elysiajs/eden'
+import { treaty } from '@elysia/eden'
 
 const app = new Elysia().get('/hello', 'hi')
 const api = treaty(app)
